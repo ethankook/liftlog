@@ -1,0 +1,16 @@
+{
+  "name": "liftlog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LiftLog workspace",
+  "scripts": {
+    "api": "pnpm --dir backend run start:dev",
+    "web": "pnpm --dir frontend start",
+    "build": "pnpm --dir backend build && pnpm --dir frontend build",
+    "test": "pnpm --dir backend test && pnpm --dir frontend exec ng test --watch=false"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.30.1"
+}
