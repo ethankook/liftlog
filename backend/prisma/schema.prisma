@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PRType {
+  WEIGHT
+  PACE
+  DISTANCE
+  TIME
+}
+
+enum MuscleGroup {
+  CHEST
+  SHOULDER
+  TRICEP
+  BACK
+  BICEP
+  CORE
+  FOREARM
+  LEGS
+}
+
+model Muscle {
+  id    String      @id @default(uuid())
+  name  String      @unique
+  group MuscleGroup
+
+  primaryExercises   Exercise[] @relation("PrimaryMuscle")
+  secondaryExercises Exercise[] @relation("SecondaryMuscle")
+}
+
+model Workout {
+  id         String        @id @default(uuid())
+  title      String
+  labelId    String?
+  label      WorkoutLabel? @relation(fields: [labelId], references: [id])
+  bodyWeight Float?
+  notes      String?
+  dateTime   DateTime      @default(now())
+
+  workoutExercises WorkoutExercise[]
+  createdAt        DateTime          @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WorkoutLabel {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  slug      String    @unique
+  color     String?
+  workouts  Workout[]
+  createdAt DateTime  @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model Exercise {
+  id   String @id @default(uuid())
+  name String @unique
+
+  primaryMuscleId String
+  primaryMuscle   Muscle @relation("PrimaryMuscle", fields: [primaryMuscleId], references: [id])
+
+  secondaryMuscles Muscle[] @relation("SecondaryMuscle")
+
+  trackedFields    TrackingField[]
+  workoutExercises WorkoutExercise[]
+  personalRecords  PersonalRecord[]
+  createdAt        DateTime          @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model TrackingField {
+  id       String  @id @default(uuid())
+  key      String  @unique
+  label    String
+  unitType String?
+
+  exercises Exercise[]
+  createdAt DateTime   @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model WorkoutExercise {
+  id String @id @default(uuid())
+
+  workoutId  String
+  exerciseId String
+
+  workout  Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+
+  sets      SetEntry[]
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model SetEntry {
+  id                String @id @default(uuid())
+  workoutExerciseId String
+
+  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+
+  values    Json
+  notes     String?
+  sortOrder Int     @default(0)
+
+  prRef     PersonalRecord?
+  createdAt DateTime        @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model PersonalRecord {
+  id       String   @id @default(uuid())
+  type     PRType
+  value    Float
+  reps     Int?
+  snapshot Json?
+  date     DateTime @default(now())
+
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  sourceSetId String?   @unique
+  sourceSet   SetEntry? @relation(fields: [sourceSetId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+
+  updatedAt DateTime @updatedAt
+}
