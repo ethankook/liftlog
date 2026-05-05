@@ -61,3 +61,5 @@ typings/
 __screenshots__/
 
 generated/
+postman/
+.postman
