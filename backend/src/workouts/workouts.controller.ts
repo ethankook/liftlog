@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { WorkoutsService } from './workouts.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
@@ -16,27 +17,31 @@ export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
 
   @Post()
-  create(@Body() createWorkoutDto: CreateWorkoutDto) {
-    return this.workoutsService.create(createWorkoutDto);
+  create(@Body() dto: CreateWorkoutDto) {
+    return this.workoutsService.create(dto);
   }
 
   @Get()
-  findAll() {
-    return this.workoutsService.findAll();
+  findAll(
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('labelId') labelId?: string,
+  ) {
+    return this.workoutsService.findAll({ from, to, labelId });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.workoutsService.findOne(+id);
+    return this.workoutsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkoutDto: UpdateWorkoutDto) {
-    return this.workoutsService.update(+id, updateWorkoutDto);
+  update(@Param('id') id: string, @Body() dto: UpdateWorkoutDto) {
+    return this.workoutsService.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.workoutsService.remove(+id);
+    return this.workoutsService.remove(id);
   }
 }

@@ -1,47 +1,21 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { PRType } from '@prisma/client';
 import { PersonalRecordsService } from './personal-records.service';
-import { CreatePersonalRecordDto } from './dto/create-personal-record.dto';
-import { UpdatePersonalRecordDto } from './dto/update-personal-record.dto';
 
 @Controller('personal-records')
 export class PersonalRecordsController {
-  constructor(
-    private readonly personalRecordsService: PersonalRecordsService,
-  ) {}
-
-  @Post()
-  create(@Body() createPersonalRecordDto: CreatePersonalRecordDto) {
-    return this.personalRecordsService.create(createPersonalRecordDto);
-  }
+  constructor(private readonly service: PersonalRecordsService) {}
 
   @Get()
-  findAll() {
-    return this.personalRecordsService.findAll();
+  findAll(
+    @Query('exerciseId') exerciseId?: string,
+    @Query('type') type?: PRType,
+  ) {
+    return this.service.findAll({ exerciseId, type });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.personalRecordsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updatePersonalRecordDto: UpdatePersonalRecordDto,
-  ) {
-    return this.personalRecordsService.update(+id, updatePersonalRecordDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.personalRecordsService.remove(+id);
+    return this.service.findOne(id);
   }
 }

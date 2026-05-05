@@ -100,7 +100,7 @@ CREATE TABLE "PersonalRecord" (
     "snapshot" JSONB,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "exerciseId" TEXT NOT NULL,
-    "sourceSetId" TEXT,
+    "sourceSetId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -184,7 +184,7 @@ ALTER TABLE "SetEntry" ADD CONSTRAINT "SetEntry_workoutExerciseId_fkey" FOREIGN 
 ALTER TABLE "PersonalRecord" ADD CONSTRAINT "PersonalRecord_exerciseId_fkey" FOREIGN KEY ("exerciseId") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PersonalRecord" ADD CONSTRAINT "PersonalRecord_sourceSetId_fkey" FOREIGN KEY ("sourceSetId") REFERENCES "SetEntry"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PersonalRecord" ADD CONSTRAINT "PersonalRecord_sourceSetId_fkey" FOREIGN KEY ("sourceSetId") REFERENCES "SetEntry"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_SecondaryMuscle" ADD CONSTRAINT "_SecondaryMuscle_A_fkey" FOREIGN KEY ("A") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;

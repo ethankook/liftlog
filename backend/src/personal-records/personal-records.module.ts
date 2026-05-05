@@ -5,5 +5,6 @@ import { PersonalRecordsController } from './personal-records.controller';
 @Module({
   controllers: [PersonalRecordsController],
   providers: [PersonalRecordsService],
+  exports: [PersonalRecordsService],
 })
 export class PersonalRecordsModule {}
