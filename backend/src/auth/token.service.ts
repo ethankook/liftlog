@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import { AuthUser, TokenPayload } from './auth.types';
+import type { AuthUser, TokenPayload } from './auth.types';
 
 interface SignedTokenPair {
   accessToken: string;
@@ -12,18 +12,18 @@ interface SignedTokenPair {
 export class TokenService {
   constructor(private readonly configService: ConfigService) {}
 
-  async signTokenPair(user: AuthUser): Promise<SignedTokenPair> {
+  signTokenPair(user: AuthUser): SignedTokenPair {
     return {
       accessToken: this.signToken(user, 'access'),
       refreshToken: this.signToken(user, 'refresh'),
     };
   }
 
-  async verifyAccessToken(token: string): Promise<TokenPayload> {
+  verifyAccessToken(token: string): TokenPayload {
     return this.verifyToken(token, 'access');
   }
 
-  async verifyRefreshToken(token: string): Promise<TokenPayload> {
+  verifyRefreshToken(token: string): TokenPayload {
     return this.verifyToken(token, 'refresh');
   }
 
@@ -61,8 +61,8 @@ export class TokenService {
 
     const data = `${encodedHeader}.${encodedPayload}`;
     const expectedSignature = this.sign(data, secret);
-    const actualSignature = Buffer.from(encodedSignature);
-    const expectedSignatureBuffer = Buffer.from(expectedSignature);
+    const actualSignature = Buffer.from(encodedSignature, 'base64url');
+    const expectedSignatureBuffer = Buffer.from(expectedSignature, 'base64url');
 
     if (
       actualSignature.length !== expectedSignatureBuffer.length ||

@@ -108,6 +108,18 @@ CREATE TABLE "PersonalRecord" (
 );
 
 -- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "passwordHash" TEXT NOT NULL,
+    "refreshTokenHash" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_SecondaryMuscle" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
@@ -143,6 +155,9 @@ CREATE UNIQUE INDEX "TrackingField_key_key" ON "TrackingField"("key");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PersonalRecord_sourceSetId_key" ON "PersonalRecord"("sourceSetId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE INDEX "_SecondaryMuscle_B_index" ON "_SecondaryMuscle"("B");

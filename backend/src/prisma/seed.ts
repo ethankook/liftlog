@@ -1,11 +1,8 @@
-import {
-  MuscleGroup,
-  PrismaClient,
-  UnitType,
-} from '../../generated/prisma/client';
+import * as PrismaClientPackage from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { hashSecret } from '../auth/secret-hash';
 
-const prisma = new PrismaClient({
+const prisma = new PrismaClientPackage.PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
 });
 
@@ -14,6 +11,7 @@ function toSlug(name: string): string {
 }
 
 async function main() {
+  await seedAdminUser();
   await seedWorkoutLabels();
   await seedMuscles();
   await seedTrackingFields();
@@ -46,42 +44,51 @@ async function seedWorkoutLabels() {
 
 async function seedMuscles() {
   const muscles = [
-    { name: 'Upper Chest', group: MuscleGroup.CHEST },
-    { name: 'Mid Chest', group: MuscleGroup.CHEST },
-    { name: 'Lower Chest', group: MuscleGroup.CHEST },
+    { name: 'Upper Chest', group: PrismaClientPackage.MuscleGroup.CHEST },
+    { name: 'Mid Chest', group: PrismaClientPackage.MuscleGroup.CHEST },
+    { name: 'Lower Chest', group: PrismaClientPackage.MuscleGroup.CHEST },
 
-    { name: 'Front Delt', group: MuscleGroup.SHOULDER },
-    { name: 'Side Delt', group: MuscleGroup.SHOULDER },
-    { name: 'Rear Delt', group: MuscleGroup.SHOULDER },
+    { name: 'Front Delt', group: PrismaClientPackage.MuscleGroup.SHOULDER },
+    { name: 'Side Delt', group: PrismaClientPackage.MuscleGroup.SHOULDER },
+    { name: 'Rear Delt', group: PrismaClientPackage.MuscleGroup.SHOULDER },
 
-    { name: 'Long Head Triceps', group: MuscleGroup.TRICEP },
-    { name: 'Lateral Head Triceps', group: MuscleGroup.TRICEP },
-    { name: 'Medial Head Triceps', group: MuscleGroup.TRICEP },
+    {
+      name: 'Long Head Triceps',
+      group: PrismaClientPackage.MuscleGroup.TRICEP,
+    },
+    {
+      name: 'Lateral Head Triceps',
+      group: PrismaClientPackage.MuscleGroup.TRICEP,
+    },
+    {
+      name: 'Medial Head Triceps',
+      group: PrismaClientPackage.MuscleGroup.TRICEP,
+    },
 
-    { name: 'Long Head Biceps', group: MuscleGroup.BICEP },
-    { name: 'Short Head Biceps', group: MuscleGroup.BICEP },
-    { name: 'Brachialis', group: MuscleGroup.BICEP },
+    { name: 'Long Head Biceps', group: PrismaClientPackage.MuscleGroup.BICEP },
+    { name: 'Short Head Biceps', group: PrismaClientPackage.MuscleGroup.BICEP },
+    { name: 'Brachialis', group: PrismaClientPackage.MuscleGroup.BICEP },
 
-    { name: 'Lats', group: MuscleGroup.BACK },
-    { name: 'Upper Traps', group: MuscleGroup.BACK },
-    { name: 'Mid Traps', group: MuscleGroup.BACK },
-    { name: 'Lower Traps', group: MuscleGroup.BACK },
-    { name: 'Rhomboids', group: MuscleGroup.BACK },
-    { name: 'Erector Spinae', group: MuscleGroup.BACK },
+    { name: 'Lats', group: PrismaClientPackage.MuscleGroup.BACK },
+    { name: 'Upper Traps', group: PrismaClientPackage.MuscleGroup.BACK },
+    { name: 'Mid Traps', group: PrismaClientPackage.MuscleGroup.BACK },
+    { name: 'Lower Traps', group: PrismaClientPackage.MuscleGroup.BACK },
+    { name: 'Rhomboids', group: PrismaClientPackage.MuscleGroup.BACK },
+    { name: 'Erector Spinae', group: PrismaClientPackage.MuscleGroup.BACK },
 
-    { name: 'Upper Abs', group: MuscleGroup.CORE },
-    { name: 'Lower Abs', group: MuscleGroup.CORE },
-    { name: 'Obliques', group: MuscleGroup.CORE },
+    { name: 'Upper Abs', group: PrismaClientPackage.MuscleGroup.CORE },
+    { name: 'Lower Abs', group: PrismaClientPackage.MuscleGroup.CORE },
+    { name: 'Obliques', group: PrismaClientPackage.MuscleGroup.CORE },
 
-    { name: 'Wrist Flexors', group: MuscleGroup.FOREARM },
-    { name: 'Wrist Extensors', group: MuscleGroup.FOREARM },
+    { name: 'Wrist Flexors', group: PrismaClientPackage.MuscleGroup.FOREARM },
+    { name: 'Wrist Extensors', group: PrismaClientPackage.MuscleGroup.FOREARM },
 
-    { name: 'Quads', group: MuscleGroup.LEGS },
-    { name: 'Hamstrings', group: MuscleGroup.LEGS },
-    { name: 'Glutes', group: MuscleGroup.LEGS },
-    { name: 'Calves', group: MuscleGroup.LEGS },
-    { name: 'Hip Adductors', group: MuscleGroup.LEGS },
-    { name: 'Hip Abductors', group: MuscleGroup.LEGS },
+    { name: 'Quads', group: PrismaClientPackage.MuscleGroup.LEGS },
+    { name: 'Hamstrings', group: PrismaClientPackage.MuscleGroup.LEGS },
+    { name: 'Glutes', group: PrismaClientPackage.MuscleGroup.LEGS },
+    { name: 'Calves', group: PrismaClientPackage.MuscleGroup.LEGS },
+    { name: 'Hip Adductors', group: PrismaClientPackage.MuscleGroup.LEGS },
+    { name: 'Hip Abductors', group: PrismaClientPackage.MuscleGroup.LEGS },
   ];
 
   for (const muscle of muscles) {
@@ -100,14 +107,30 @@ async function seedMuscles() {
 
 async function seedTrackingFields() {
   const fields = [
-    { key: 'weight', label: 'Weight', unitType: UnitType.WEIGHT },
-    { key: 'reps', label: 'Reps', unitType: UnitType.NUM },
-    { key: 'distance', label: 'Distance', unitType: UnitType.DISTANCE },
-    { key: 'time', label: 'Time', unitType: UnitType.TIME },
-    { key: 'pace', label: 'Pace', unitType: UnitType.PACE },
-    { key: 'calories', label: 'Calories', unitType: UnitType.CALORIES },
-    { key: 'restTime', label: 'Rest Time', unitType: UnitType.TIME },
-    { key: 'rpe', label: 'RPE', unitType: UnitType.NUM },
+    {
+      key: 'weight',
+      label: 'Weight',
+      unitType: PrismaClientPackage.UnitType.WEIGHT,
+    },
+    { key: 'reps', label: 'Reps', unitType: PrismaClientPackage.UnitType.NUM },
+    {
+      key: 'distance',
+      label: 'Distance',
+      unitType: PrismaClientPackage.UnitType.DISTANCE,
+    },
+    { key: 'time', label: 'Time', unitType: PrismaClientPackage.UnitType.TIME },
+    { key: 'pace', label: 'Pace', unitType: PrismaClientPackage.UnitType.PACE },
+    {
+      key: 'calories',
+      label: 'Calories',
+      unitType: PrismaClientPackage.UnitType.CALORIES,
+    },
+    {
+      key: 'restTime',
+      label: 'Rest Time',
+      unitType: PrismaClientPackage.UnitType.TIME,
+    },
+    { key: 'rpe', label: 'RPE', unitType: PrismaClientPackage.UnitType.NUM },
   ];
 
   for (const field of fields) {
@@ -119,14 +142,25 @@ async function seedTrackingFields() {
   }
 }
 
-async function seedUser() {
+async function seedAdminUser() {
+  const username = process.env.ADMIN_USERNAME?.trim();
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error(
+      'ADMIN_USERNAME and ADMIN_PASSWORD are required for seeding',
+    );
+  }
+
+  const passwordHash = await hashSecret(password);
+
   await prisma.user.upsert({
-    where: { username: process.env.ADMIN_USERNAME },
+    where: { username },
     update: {
       passwordHash,
     },
     create: {
-      username: process.env.ADMIN_USERNAME,
+      username,
       passwordHash,
       refreshTokenHash: null,
     },
