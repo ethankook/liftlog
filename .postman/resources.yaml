@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: 84bda21a-d602-44c9-a499-1097f42a9abc
+
+cloudResources:
+  collections:
+    ../postman/collections/LiftLog Backend E2E: 79d0bf61-4bfe-4ff8-87ba-f0418f3e008c
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

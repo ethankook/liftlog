@@ -1,0 +1,11 @@
+name: New Environment
+values:
+  - key: url
+    enabled: true
+    value: ''
+  - key: accessToken
+    enabled: true
+    value: ''
+  - key: refreshToken
+    enabled: true
+    value: ''

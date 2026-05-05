@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/auth/me"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('returns current user', function () {
+        pm.expect(data).to.have.property('id');
+        pm.expect(data).to.have.property('username');
+        pm.expect(data.username).to.eql(pm.environment.get('adminUsername'));
+      });
+    language: text/javascript
+order: 2000

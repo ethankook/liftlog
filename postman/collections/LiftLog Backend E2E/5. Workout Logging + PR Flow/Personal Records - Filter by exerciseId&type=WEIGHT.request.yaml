@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/personal-records?exerciseId={{exerciseId}}&type=WEIGHT"
+method: GET
+queryParams:
+  exerciseId: "{{exerciseId}}"
+  type: WEIGHT
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const rows = pm.response.json();
+      pm.test('weight PR exists for created exercise', function () {
+        pm.expect(rows.length).to.be.greaterThan(0);
+        const pr = rows.find((r) => r.exerciseId === pm.environment.get('exerciseId') && r.type === 'WEIGHT');
+        pm.expect(pr).to.exist;
+        pm.environment.set('personalRecordId', pr.id);
+      });
+    language: text/javascript
+order: 11000

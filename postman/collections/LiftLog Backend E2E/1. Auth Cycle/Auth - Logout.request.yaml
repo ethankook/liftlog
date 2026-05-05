@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/auth/logout"
+method: POST
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 201', function () { pm.response.to.have.status(201); });
+      const data = pm.response.json();
+      pm.test('logout success response', function () {
+        pm.expect(data).to.have.property('success', true);
+      });
+    language: text/javascript
+order: 4000

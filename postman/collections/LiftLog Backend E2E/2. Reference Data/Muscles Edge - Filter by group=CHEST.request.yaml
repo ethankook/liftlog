@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/muscles?group=CHEST"
+method: GET
+queryParams:
+  group: CHEST
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const rows = pm.response.json();
+      pm.test('all returned rows are CHEST group', function () {
+        rows.forEach((r) => pm.expect(r.group).to.eql('CHEST'));
+      });
+    language: text/javascript
+order: 4000

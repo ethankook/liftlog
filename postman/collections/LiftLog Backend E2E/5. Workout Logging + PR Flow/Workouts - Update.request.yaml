@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts/{{workoutId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "notes": "Updated via Postman",
+      "bodyWeight": 186
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('workout updated', function () {
+        pm.expect(data.notes).to.eql('Updated via Postman');
+        pm.expect(data.bodyWeight).to.eql(186);
+      });
+    language: text/javascript
+order: 5000

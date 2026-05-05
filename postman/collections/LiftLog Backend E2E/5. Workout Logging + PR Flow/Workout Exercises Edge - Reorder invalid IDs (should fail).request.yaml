@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts/{{workoutId}}/exercises/reorder"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "orderedIds": ["{{nonExistentUuid}}"]
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('status is 409', function () { pm.response.to.have.status(409); });
+    language: text/javascript
+order: 14000

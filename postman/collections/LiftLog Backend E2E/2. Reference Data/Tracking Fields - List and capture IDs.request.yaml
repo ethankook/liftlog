@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/tracking-fields"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const rows = pm.response.json();
+      pm.test('tracking fields returned', function () {
+        pm.expect(rows).to.be.an('array').that.is.not.empty;
+      });
+      const findByKey = (k) => rows.find((r) => r.key === k);
+      const weight = findByKey('weight');
+      const reps = findByKey('reps');
+      const distance = findByKey('distance');
+      const time = findByKey('time');
+      pm.test('required field keys exist', function () {
+        pm.expect(weight).to.exist;
+        pm.expect(reps).to.exist;
+        pm.expect(distance).to.exist;
+        pm.expect(time).to.exist;
+      });
+      pm.environment.set('trackingFieldWeightId', weight.id);
+      pm.environment.set('trackingFieldRepsId', reps.id);
+      pm.environment.set('trackingFieldDistanceId', distance.id);
+      pm.environment.set('trackingFieldTimeId', time.id);
+    language: text/javascript
+order: 2000

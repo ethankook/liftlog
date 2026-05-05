@@ -1,0 +1,1702 @@
+{
+  "info": {
+    "_postman_id": "e7bbd76e-1f72-4e52-8be6-978e25df6ad2",
+    "name": "LiftLog Backend E2E",
+    "description": "End-to-end API cycle for LiftLog backend. Covers auth, reference data, labels, exercises, workouts, workout exercises, set entries, PR checks, and authorization edge cases.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.environment.get('runId')) {",
+          "  const runId = Date.now().toString();",
+          "  pm.environment.set('runId', runId);",
+          "  pm.environment.set('labelName', `E2E Label ${runId}`);",
+          "  pm.environment.set('labelNameUpdated', `E2E Label Updated ${runId}`);",
+          "  pm.environment.set('exerciseName', `E2E Exercise ${runId}`);",
+          "  pm.environment.set('exerciseNameUpdated', `E2E Exercise Updated ${runId}`);",
+          "  pm.environment.set('workoutTitle', `E2E Workout ${runId}`);",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth Cycle",
+      "item": [
+        {
+          "name": "Auth - Login (valid credentials)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('token pair and user are returned', function () {",
+                  "  pm.expect(data).to.have.property('accessToken');",
+                  "  pm.expect(data).to.have.property('refreshToken');",
+                  "  pm.expect(data).to.have.property('user');",
+                  "  pm.expect(data.user).to.have.property('id');",
+                  "  pm.expect(data.user).to.have.property('username');",
+                  "});",
+                  "pm.environment.set('accessToken', data.accessToken);",
+                  "pm.environment.set('refreshToken', data.refreshToken);",
+                  "pm.environment.set('userId', data.user.id);",
+                  "pm.environment.set('username', data.user.username);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth - Me (authorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('returns current user', function () {",
+                  "  pm.expect(data).to.have.property('id');",
+                  "  pm.expect(data).to.have.property('username');",
+                  "  pm.expect(data.username).to.eql(pm.environment.get('adminUsername'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth - Refresh (valid token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('new token pair returned', function () {",
+                  "  pm.expect(data).to.have.property('accessToken');",
+                  "  pm.expect(data).to.have.property('refreshToken');",
+                  "});",
+                  "pm.environment.set('accessToken', data.accessToken);",
+                  "pm.environment.set('refreshToken', data.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth - Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.test('logout success response', function () {",
+                  "  pm.expect(data).to.have.property('success', true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth Edge - Refresh after logout (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth Edge - Login missing password (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{adminUsername}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth Edge - Login wrong password (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{wrongPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth - Re-login for remaining suite",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.environment.set('accessToken', data.accessToken);",
+                  "pm.environment.set('refreshToken', data.refreshToken);",
+                  "pm.environment.set('userId', data.user.id);",
+                  "pm.environment.set('username', data.user.username);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Reference Data",
+      "item": [
+        {
+          "name": "App - Root status (authorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('status payload is valid', function () {",
+                  "  pm.expect(data).to.have.property('status', 'ok');",
+                  "  pm.expect(data).to.have.property('user');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}",
+              "host": [
+                "{{baseUrl}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tracking Fields - List and capture IDs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('tracking fields returned', function () {",
+                  "  pm.expect(rows).to.be.an('array').that.is.not.empty;",
+                  "});",
+                  "const findByKey = (k) => rows.find((r) => r.key === k);",
+                  "const weight = findByKey('weight');",
+                  "const reps = findByKey('reps');",
+                  "const distance = findByKey('distance');",
+                  "const time = findByKey('time');",
+                  "pm.test('required field keys exist', function () {",
+                  "  pm.expect(weight).to.exist;",
+                  "  pm.expect(reps).to.exist;",
+                  "  pm.expect(distance).to.exist;",
+                  "  pm.expect(time).to.exist;",
+                  "});",
+                  "pm.environment.set('trackingFieldWeightId', weight.id);",
+                  "pm.environment.set('trackingFieldRepsId', reps.id);",
+                  "pm.environment.set('trackingFieldDistanceId', distance.id);",
+                  "pm.environment.set('trackingFieldTimeId', time.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tracking-fields",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tracking-fields"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Muscles - List and capture sample IDs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('muscles returned', function () {",
+                  "  pm.expect(rows).to.be.an('array').that.is.not.empty;",
+                  "});",
+                  "const primary = rows[0];",
+                  "const secondary = rows.length > 1 ? rows[1] : rows[0];",
+                  "pm.environment.set('primaryMuscleId', primary.id);",
+                  "pm.environment.set('secondaryMuscleId', secondary.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/muscles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "muscles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Muscles Edge - Filter by group=CHEST",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('all returned rows are CHEST group', function () {",
+                  "  rows.forEach((r) => pm.expect(r.group).to.eql('CHEST'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/muscles?group=CHEST",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "muscles"
+              ],
+              "query": [
+                {
+                  "key": "group",
+                  "value": "CHEST"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Labels - List baseline",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('returns array', function () { pm.expect(rows).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/workout-labels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workout-labels"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Personal Records - Baseline list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('returns array', function () { pm.expect(rows).to.be.an('array'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personal-records",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "personal-records"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Workout Label CRUD",
+      "item": [
+        {
+          "name": "Workout Labels - Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.test('created label matches request', function () {",
+                  "  pm.expect(data.name).to.eql(pm.environment.get('labelName'));",
+                  "  pm.expect(data.color).to.eql('#22c55e');",
+                  "});",
+                  "pm.environment.set('createdLabelId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{labelName}}\",\n  \"color\": \"#22c55e\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workout-labels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workout-labels"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Labels Edge - Create duplicate name (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{labelName}}\",\n  \"color\": \"#22c55e\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workout-labels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workout-labels"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Labels - Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('name and color updated', function () {",
+                  "  pm.expect(data.name).to.eql(pm.environment.get('labelNameUpdated'));",
+                  "  pm.expect(data.color).to.eql('#06b6d4');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{labelNameUpdated}}\",\n  \"color\": \"#06b6d4\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workout-labels/{{createdLabelId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workout-labels",
+                "{{createdLabelId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Labels - Get by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('returns requested label', function () {",
+                  "  pm.expect(data.id).to.eql(pm.environment.get('createdLabelId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/workout-labels/{{createdLabelId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workout-labels",
+                "{{createdLabelId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Exercise CRUD",
+      "item": [
+        {
+          "name": "Exercises - Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.test('exercise created with tracked fields', function () {",
+                  "  pm.expect(data.name).to.eql(pm.environment.get('exerciseName'));",
+                  "  pm.expect(data).to.have.property('trackedFields');",
+                  "});",
+                  "pm.environment.set('exerciseId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{exerciseName}}\",\n  \"primaryMuscleId\": \"{{primaryMuscleId}}\",\n  \"secondaryMuscleIds\": [\"{{secondaryMuscleId}}\"],\n  \"trackedFieldIds\": [\"{{trackingFieldWeightId}}\", \"{{trackingFieldRepsId}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exercises",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exercises"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Exercises - List by primaryMuscleId",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('created exercise is returned', function () {",
+                  "  pm.expect(rows.some((r) => r.id === pm.environment.get('exerciseId'))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/exercises?primaryMuscleId={{primaryMuscleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exercises"
+              ],
+              "query": [
+                {
+                  "key": "primaryMuscleId",
+                  "value": "{{primaryMuscleId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Exercises - Get by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('returns requested exercise', function () {",
+                  "  pm.expect(data.id).to.eql(pm.environment.get('exerciseId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/exercises/{{exerciseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exercises",
+                "{{exerciseId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Exercises - Update name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('name updated', function () {",
+                  "  pm.expect(data.name).to.eql(pm.environment.get('exerciseNameUpdated'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{exerciseNameUpdated}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exercises/{{exerciseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exercises",
+                "{{exerciseId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Exercises Edge - Update invalid tracked field IDs (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trackedFieldIds\": [\"{{nonExistentUuid}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exercises/{{exerciseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exercises",
+                "{{exerciseId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Workout Logging + PR Flow",
+      "item": [
+        {
+          "name": "Workouts - Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.test('workout created', function () {",
+                  "  pm.expect(data.title).to.eql(pm.environment.get('workoutTitle'));",
+                  "});",
+                  "pm.environment.set('workoutId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"{{workoutTitle}}\",\n  \"labelId\": \"{{createdLabelId}}\",\n  \"bodyWeight\": 185.5,\n  \"notes\": \"Postman full-cycle test workout\",\n  \"dateTime\": \"2026-01-01T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workouts Edge - Create with invalid bodyWeight=0 (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Invalid Workout\",\n  \"bodyWeight\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workouts - List by labelId",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('created workout is returned', function () {",
+                  "  pm.expect(rows.some((r) => r.id === pm.environment.get('workoutId'))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/workouts?labelId={{createdLabelId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts"
+              ],
+              "query": [
+                {
+                  "key": "labelId",
+                  "value": "{{createdLabelId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workouts - Get by ID (expanded)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('expanded workout shape is returned', function () {",
+                  "  pm.expect(data.id).to.eql(pm.environment.get('workoutId'));",
+                  "  pm.expect(data).to.have.property('workoutExercises');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workouts - Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('workout updated', function () {",
+                  "  pm.expect(data.notes).to.eql('Updated via Postman');",
+                  "  pm.expect(data.bodyWeight).to.eql(186);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated via Postman\",\n  \"bodyWeight\": 186\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Exercises - Add exercise to workout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.test('workout exercise created', function () {",
+                  "  pm.expect(data).to.have.property('id');",
+                  "  pm.expect(data).to.have.property('exerciseId');",
+                  "});",
+                  "pm.environment.set('workoutExerciseId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exerciseId\": \"{{exerciseId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Entries - Create valid set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.test('set entry created', function () {",
+                  "  pm.expect(data).to.have.property('id');",
+                  "  pm.expect(data.values.weight).to.eql(225);",
+                  "  pm.expect(data.values.reps).to.eql(5);",
+                  "});",
+                  "pm.environment.set('setEntryId', data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"values\": {\n    \"weight\": 225,\n    \"reps\": 5\n  },\n  \"notes\": \"Top set\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "{{workoutExerciseId}}",
+                "sets"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Entries Edge - Unknown value key (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"values\": {\n    \"weight\": 185,\n    \"reps\": 8,\n    \"rpe\": 9\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "{{workoutExerciseId}}",
+                "sets"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Entries Edge - Non-numeric value (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"values\": {\n    \"weight\": \"heavy\",\n    \"reps\": 5\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "{{workoutExerciseId}}",
+                "sets"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Entries - Update values (PR recompute trigger)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('set updated', function () {",
+                  "  pm.expect(data.values.weight).to.eql(235);",
+                  "  pm.expect(data.values.reps).to.eql(6);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"values\": {\n    \"weight\": 235,\n    \"reps\": 6\n  },\n  \"notes\": \"Updated top set\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets/{{setEntryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "{{workoutExerciseId}}",
+                "sets",
+                "{{setEntryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Personal Records - Filter by exerciseId&type=WEIGHT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('weight PR exists for created exercise', function () {",
+                  "  pm.expect(rows.length).to.be.greaterThan(0);",
+                  "  const pr = rows.find((r) => r.exerciseId === pm.environment.get('exerciseId') && r.type === 'WEIGHT');",
+                  "  pm.expect(pr).to.exist;",
+                  "  pm.environment.set('personalRecordId', pr.id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personal-records?exerciseId={{exerciseId}}&type=WEIGHT",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "personal-records"
+              ],
+              "query": [
+                {
+                  "key": "exerciseId",
+                  "value": "{{exerciseId}}"
+                },
+                {
+                  "key": "type",
+                  "value": "WEIGHT"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Personal Records - Get by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test('returns expected PR row', function () {",
+                  "  pm.expect(data.id).to.eql(pm.environment.get('personalRecordId'));",
+                  "  pm.expect(data.type).to.eql('WEIGHT');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personal-records/{{personalRecordId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "personal-records",
+                "{{personalRecordId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Exercises - Reorder (single row)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const rows = pm.response.json();",
+                  "pm.test('reorder response is array', function () {",
+                  "  pm.expect(rows).to.be.an('array').that.has.lengthOf(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderedIds\": [\"{{workoutExerciseId}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/reorder",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "reorder"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Exercises Edge - Reorder invalid IDs (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderedIds\": [\"{{nonExistentUuid}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/reorder",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "reorder"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Entries - Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets/{{setEntryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "{{workoutExerciseId}}",
+                "sets",
+                "{{setEntryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Exercises - Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}",
+                "exercises",
+                "{{workoutExerciseId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workouts - Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/workouts/{{workoutId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workouts",
+                "{{workoutId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Exercises - Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/exercises/{{exerciseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exercises",
+                "{{exerciseId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workout Labels - Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/workout-labels/{{createdLabelId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "workout-labels",
+                "{{createdLabelId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Authorization Edge Cases",
+      "item": [
+        {
+          "name": "Auth Edge - /auth/me without token (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auth Edge - /auth/me with malformed auth header (should fail)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token abc123"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

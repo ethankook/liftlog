@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('status payload is valid', function () {
+        pm.expect(data).to.have.property('status', 'ok');
+        pm.expect(data).to.have.property('user');
+      });
+    language: text/javascript
+order: 1000

@@ -1,0 +1,21 @@
+$kind: collection
+description: End-to-end API cycle for LiftLog backend. Covers auth, reference data, labels, exercises, workouts, workout exercises, set entries, PR checks, and authorization edge cases.
+scripts:
+  - type: http:beforeRequest
+    code: |-
+      if (!pm.environment.get('runId')) {
+        const runId = Date.now().toString();
+        pm.environment.set('runId', runId);
+        pm.environment.set('labelName', `E2E Label ${runId}`);
+        pm.environment.set('labelNameUpdated', `E2E Label Updated ${runId}`);
+        pm.environment.set('exerciseName', `E2E Exercise ${runId}`);
+        pm.environment.set('exerciseNameUpdated', `E2E Exercise Updated ${runId}`);
+        pm.environment.set('workoutTitle', `E2E Workout ${runId}`);
+      }
+    language: text/javascript
+auth:
+  - id: 9e910742-00db-4007-a87c-b0572a77ca14
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{accessToken}}"

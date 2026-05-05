@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "values": {
+        "weight": 225,
+        "reps": 5
+      },
+      "notes": "Top set"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 201', function () { pm.response.to.have.status(201); });
+      const data = pm.response.json();
+      pm.test('set entry created', function () {
+        pm.expect(data).to.have.property('id');
+        pm.expect(data.values.weight).to.eql(225);
+        pm.expect(data.values.reps).to.eql(5);
+      });
+      pm.environment.set('setEntryId', data.id);
+    language: text/javascript
+order: 7000

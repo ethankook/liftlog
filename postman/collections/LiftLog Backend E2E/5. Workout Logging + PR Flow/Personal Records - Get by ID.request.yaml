@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/personal-records/{{personalRecordId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('returns expected PR row', function () {
+        pm.expect(data.id).to.eql(pm.environment.get('personalRecordId'));
+        pm.expect(data.type).to.eql('WEIGHT');
+      });
+    language: text/javascript
+order: 12000

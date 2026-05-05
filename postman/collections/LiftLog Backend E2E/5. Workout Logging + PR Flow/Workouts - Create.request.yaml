@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "title": "{{workoutTitle}}",
+      "labelId": "{{createdLabelId}}",
+      "bodyWeight": 185.5,
+      "notes": "Postman full-cycle test workout",
+      "dateTime": "2026-01-01T10:00:00.000Z"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 201', function () { pm.response.to.have.status(201); });
+      const data = pm.response.json();
+      pm.test('workout created', function () {
+        pm.expect(data.title).to.eql(pm.environment.get('workoutTitle'));
+      });
+      pm.environment.set('workoutId', data.id);
+    language: text/javascript
+order: 1000

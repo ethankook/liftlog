@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/workout-labels/{{createdLabelId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "{{labelNameUpdated}}",
+      "color": "#06b6d4"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('name and color updated', function () {
+        pm.expect(data.name).to.eql(pm.environment.get('labelNameUpdated'));
+        pm.expect(data.color).to.eql('#06b6d4');
+      });
+    language: text/javascript
+order: 3000

@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/workout-labels"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "{{labelName}}",
+      "color": "#22c55e"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 201', function () { pm.response.to.have.status(201); });
+      const data = pm.response.json();
+      pm.test('created label matches request', function () {
+        pm.expect(data.name).to.eql(pm.environment.get('labelName'));
+        pm.expect(data.color).to.eql('#22c55e');
+      });
+      pm.environment.set('createdLabelId', data.id);
+    language: text/javascript
+order: 1000

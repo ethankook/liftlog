@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets/{{setEntryId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "values": {
+        "weight": 235,
+        "reps": 6
+      },
+      "notes": "Updated top set"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('set updated', function () {
+        pm.expect(data.values.weight).to.eql(235);
+        pm.expect(data.values.reps).to.eql(6);
+      });
+    language: text/javascript
+order: 10000

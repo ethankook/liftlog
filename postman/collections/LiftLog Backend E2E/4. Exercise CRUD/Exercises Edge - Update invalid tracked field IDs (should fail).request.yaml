@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/exercises/{{exerciseId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "trackedFieldIds": ["{{nonExistentUuid}}"]
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('status is 400', function () { pm.response.to.have.status(400); });
+    language: text/javascript
+order: 5000

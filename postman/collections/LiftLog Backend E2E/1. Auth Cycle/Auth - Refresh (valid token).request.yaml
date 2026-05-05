@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/auth/refresh"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "refreshToken": "{{refreshToken}}"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('new token pair returned', function () {
+        pm.expect(data).to.have.property('accessToken');
+        pm.expect(data).to.have.property('refreshToken');
+      });
+      pm.environment.set('accessToken', data.accessToken);
+      pm.environment.set('refreshToken', data.refreshToken);
+    language: text/javascript
+order: 3000

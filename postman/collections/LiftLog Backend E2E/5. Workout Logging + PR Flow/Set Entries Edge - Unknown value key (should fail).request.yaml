@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts/{{workoutId}}/exercises/{{workoutExerciseId}}/sets"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "values": {
+        "weight": 185,
+        "reps": 8,
+        "rpe": 9
+      }
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('status is 400', function () { pm.response.to.have.status(400); });
+    language: text/javascript
+order: 8000

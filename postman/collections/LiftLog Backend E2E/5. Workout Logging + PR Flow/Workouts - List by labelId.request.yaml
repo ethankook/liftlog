@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts?labelId={{createdLabelId}}"
+method: GET
+queryParams:
+  labelId: "{{createdLabelId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const rows = pm.response.json();
+      pm.test('created workout is returned', function () {
+        pm.expect(rows.some((r) => r.id === pm.environment.get('workoutId'))).to.eql(true);
+      });
+    language: text/javascript
+order: 3000

@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/exercises"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "{{exerciseName}}",
+      "primaryMuscleId": "{{primaryMuscleId}}",
+      "secondaryMuscleIds": ["{{secondaryMuscleId}}"],
+      "trackedFieldIds": ["{{trackingFieldWeightId}}", "{{trackingFieldRepsId}}"]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 201', function () { pm.response.to.have.status(201); });
+      const data = pm.response.json();
+      pm.test('exercise created with tracked fields', function () {
+        pm.expect(data.name).to.eql(pm.environment.get('exerciseName'));
+        pm.expect(data).to.have.property('trackedFields');
+      });
+      pm.environment.set('exerciseId', data.id);
+    language: text/javascript
+order: 1000

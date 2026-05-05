@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/workouts/{{workoutId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      pm.test('expanded workout shape is returned', function () {
+        pm.expect(data.id).to.eql(pm.environment.get('workoutId'));
+        pm.expect(data).to.have.property('workoutExercises');
+      });
+    language: text/javascript
+order: 4000
