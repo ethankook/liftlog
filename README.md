@@ -1,2 +1,2 @@
-To seed:   pnpm --dir backend exec node --env-file=.env --import tsx src/prisma/seed.ts
+To seed:  cd backend && pnpm prisma db seed  
 
