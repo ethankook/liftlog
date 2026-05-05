@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "UnitType" AS ENUM ('WEIGHT', 'DISTANCE', 'TIME', 'PACE', 'CALORIES', 'NUM');
+
+-- CreateEnum
 CREATE TYPE "PRType" AS ENUM ('WEIGHT', 'PACE', 'DISTANCE', 'TIME');
 
 -- CreateEnum
@@ -8,6 +11,7 @@ CREATE TYPE "MuscleGroup" AS ENUM ('CHEST', 'SHOULDER', 'TRICEP', 'BACK', 'BICEP
 CREATE TABLE "Muscle" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
     "group" "MuscleGroup" NOT NULL,
 
     CONSTRAINT "Muscle_pkey" PRIMARY KEY ("id")
@@ -55,7 +59,7 @@ CREATE TABLE "TrackingField" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "label" TEXT NOT NULL,
-    "unitType" TEXT,
+    "unitType" "UnitType",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -121,6 +125,9 @@ CREATE TABLE "_ExerciseToTrackingField" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Muscle_name_key" ON "Muscle"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Muscle_slug_key" ON "Muscle"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "WorkoutLabel_name_key" ON "WorkoutLabel"("name");

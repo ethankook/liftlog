@@ -12,6 +12,15 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UnitType {
+  WEIGHT
+  DISTANCE
+  TIME
+  PACE
+  CALORIES
+  NUM
+}
+
 enum PRType {
   WEIGHT
   PACE
@@ -33,6 +42,7 @@ enum MuscleGroup {
 model Muscle {
   id    String      @id @default(uuid())
   name  String      @unique
+  slug  String      @unique
   group MuscleGroup
 
   primaryExercises   Exercise[] @relation("PrimaryMuscle")
@@ -83,10 +93,10 @@ model Exercise {
 }
 
 model TrackingField {
-  id       String  @id @default(uuid())
-  key      String  @unique
+  id       String    @id @default(uuid())
+  key      String    @unique
   label    String
-  unitType String?
+  unitType UnitType?
 
   exercises Exercise[]
   createdAt DateTime   @default(now())
@@ -142,4 +152,13 @@ model PersonalRecord {
   createdAt   DateTime  @default(now())
 
   updatedAt DateTime @updatedAt
+}
+
+model User {
+  id               String   @id @default(uuid())
+  username         String   @unique
+  passwordHash     String
+  refreshTokenHash String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
