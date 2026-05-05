@@ -119,6 +119,20 @@ async function seedTrackingFields() {
   }
 }
 
+async function seedUser() {
+  await prisma.user.upsert({
+    where: { username: process.env.ADMIN_USERNAME },
+    update: {
+      passwordHash,
+    },
+    create: {
+      username: process.env.ADMIN_USERNAME,
+      passwordHash,
+      refreshTokenHash: null,
+    },
+  });
+}
+
 main()
   .then(async () => {
     await prisma.$disconnect();

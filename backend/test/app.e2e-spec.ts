@@ -16,10 +16,14 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/ (GET) requires auth', () => {
+    return request(app.getHttpServer()).get('/').expect(401);
+  });
+
+  it('/auth/login (POST) validates payload', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .post('/auth/login')
+      .send({})
+      .expect(400);
   });
 });

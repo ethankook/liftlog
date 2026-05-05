@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { CurrentUser } from './auth/current-user.decorator';
+import type { AuthUser } from './auth/auth.types';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getStatus(@CurrentUser() user: AuthUser) {
+    return {
+      status: 'ok',
+      user,
+    };
   }
 }
