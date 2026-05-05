@@ -146,8 +146,8 @@ model PersonalRecord {
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
-  sourceSetId String?   @unique
-  sourceSet   SetEntry? @relation(fields: [sourceSetId], references: [id], onDelete: SetNull)
+  sourceSetId String   @unique
+  sourceSet   SetEntry @relation(fields: [sourceSetId], references: [id], onDelete: Cascade)
   createdAt   DateTime  @default(now())
 
   updatedAt DateTime @updatedAt

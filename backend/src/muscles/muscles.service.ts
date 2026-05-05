@@ -1,26 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CreateMuscleDto } from './dto/create-muscle.dto';
-import { UpdateMuscleDto } from './dto/update-muscle.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { MuscleGroup } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class MusclesService {
-  create(createMuscleDto: CreateMuscleDto) {
-    return 'This action adds a new muscle';
+  constructor(private readonly prisma: PrismaService) {}
+
+  findAll(group?: MuscleGroup) {
+    return this.prisma.client.muscle.findMany({
+      where: group ? { group } : undefined,
+      orderBy: [{ group: 'asc' }, { name: 'asc' }],
+    });
   }
 
-  findAll() {
-    return `This action returns all muscles`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} muscle`;
-  }
-
-  update(id: number, updateMuscleDto: UpdateMuscleDto) {
-    return `This action updates a #${id} muscle`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} muscle`;
+  async findOne(id: string) {
+    const row = await this.prisma.client.muscle.findUnique({ where: { id } });
+    if (!row) throw new NotFoundException();
+    return row;
   }
 }

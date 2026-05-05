@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ExercisesService } from './exercises.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
@@ -16,30 +17,27 @@ export class ExercisesController {
   constructor(private readonly exercisesService: ExercisesService) {}
 
   @Post()
-  create(@Body() createExerciseDto: CreateExerciseDto) {
-    return this.exercisesService.create(createExerciseDto);
+  create(@Body() dto: CreateExerciseDto) {
+    return this.exercisesService.create(dto);
   }
 
   @Get()
-  findAll() {
-    return this.exercisesService.findAll();
+  findAll(@Query('primaryMuscleId') primaryMuscleId?: string) {
+    return this.exercisesService.findAll(primaryMuscleId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.exercisesService.findOne(+id);
+    return this.exercisesService.findOne(id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateExerciseDto: UpdateExerciseDto,
-  ) {
-    return this.exercisesService.update(+id, updateExerciseDto);
+  update(@Param('id') id: string, @Body() dto: UpdateExerciseDto) {
+    return this.exercisesService.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.exercisesService.remove(+id);
+    return this.exercisesService.remove(id);
   }
 }

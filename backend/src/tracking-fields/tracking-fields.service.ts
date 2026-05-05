@@ -1,26 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTrackingFieldDto } from './dto/create-tracking-field.dto';
-import { UpdateTrackingFieldDto } from './dto/update-tracking-field.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TrackingFieldsService {
-  create(createTrackingFieldDto: CreateTrackingFieldDto) {
-    return 'This action adds a new trackingField';
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   findAll() {
-    return `This action returns all trackingFields`;
+    return this.prisma.client.trackingField.findMany({
+      orderBy: { label: 'asc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} trackingField`;
-  }
-
-  update(id: number, updateTrackingFieldDto: UpdateTrackingFieldDto) {
-    return `This action updates a #${id} trackingField`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} trackingField`;
+  async findOne(id: string) {
+    const row = await this.prisma.client.trackingField.findUnique({
+      where: { id },
+    });
+    if (!row) throw new NotFoundException();
+    return row;
   }
 }
