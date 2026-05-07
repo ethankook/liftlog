@@ -3,15 +3,8 @@ import { AuthService } from './auth.service';
 import { CurrentUser } from './current-user.decorator';
 import { Public } from './public.decorator';
 import type { AuthUser } from './auth.types';
-
-interface LoginRequestBody {
-  username?: string;
-  password?: string;
-}
-
-interface RefreshRequestBody {
-  refreshToken?: string;
-}
+import { LoginDto } from './dto/login.dto';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,13 +12,13 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  async login(@Body() body: LoginRequestBody) {
+  async login(@Body() body: LoginDto) {
     return this.authService.login(body);
   }
 
   @Public()
   @Post('refresh')
-  async refresh(@Body() body: RefreshRequestBody) {
+  async refresh(@Body() body: RefreshDto) {
     return this.authService.refresh(body);
   }
 

@@ -6,15 +6,8 @@ import {
 import { UsersService } from '../users/users.service';
 import { CryptoService } from './crypto.service';
 import { TokenService } from './token.service';
-
-interface LoginInput {
-  username?: string;
-  password?: string;
-}
-
-interface RefreshInput {
-  refreshToken?: string;
-}
+import { LoginDto } from './dto/login.dto';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +17,11 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async login(input: LoginInput) {
+  async login(input: LoginDto | null | undefined) {
+    if (!input) {
+      throw new BadRequestException('Username and password are required');
+    }
+
     const username = input.username?.trim();
     const password = input.password;
 
@@ -49,13 +46,17 @@ export class AuthService {
     return this.issueTokenPair(user.id, user.username);
   }
 
-  async refresh(input: RefreshInput) {
+  async refresh(input: RefreshDto | null | undefined) {
+    if (!input) {
+      throw new BadRequestException('Refresh token is required');
+    }
+
     const refreshToken = input.refreshToken?.trim();
     if (!refreshToken) {
       throw new BadRequestException('Refresh token is required');
     }
 
-    const payload = await this.tokenService.verifyRefreshToken(refreshToken);
+    const payload = this.tokenService.verifyRefreshToken(refreshToken);
     const user = await this.usersService.findById(payload.sub);
 
     if (!user) {
@@ -93,7 +94,7 @@ export class AuthService {
   }
 
   private async issueTokenPair(userId: string, username: string) {
-    const tokens = await this.tokenService.signTokenPair({
+    const tokens = this.tokenService.signTokenPair({
       id: userId,
       username,
     });

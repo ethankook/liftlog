@@ -103,8 +103,7 @@ export class PersonalRecordsService {
   ): Candidate | null {
     const v = (set.values ?? {}) as Record<string, unknown>;
     const date = set.workoutExercise.workout.dateTime;
-    const num = (k: string) =>
-      typeof v[k] === 'number' ? (v[k] as number) : null;
+    const num = (k: string) => (typeof v[k] === 'number' ? v[k] : null);
 
     if (type === PRType.WEIGHT) {
       const weight = num('weight');
