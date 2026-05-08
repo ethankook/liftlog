@@ -22,7 +22,7 @@ export class Login {
 
     try {
       await this.auth.login({ username, password });
-      await this.router.navigate(['/']);
+      await this.router.navigate(['/dashboard']);
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.error.set(err.error.message ?? 'Login failed.');
