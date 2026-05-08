@@ -114,6 +114,12 @@ async function seedTrackingFields() {
     },
     { key: 'reps', label: 'Reps', unitType: PrismaClientPackage.UnitType.NUM },
     {
+      key: 'repsPerSide',
+      label: 'repsPerSide',
+      unitType: PrismaClientPackage.UnitType.NUM,
+    },
+
+    {
       key: 'distance',
       label: 'Distance',
       unitType: PrismaClientPackage.UnitType.DISTANCE,

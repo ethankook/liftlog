@@ -45,7 +45,10 @@ export class ExercisesService {
     return this.prisma.client.exercise.findMany({
       where: primaryMuscleId ? { primaryMuscleId } : undefined,
       orderBy: { name: 'asc' },
-      include: { primaryMuscle: true },
+      include: {
+        primaryMuscle: true,
+        secondaryMuscles: true,
+      },
     });
   }
 
