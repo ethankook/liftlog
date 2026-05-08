@@ -14,7 +14,7 @@ export class Dashboard {
 
   username = computed(() => this.auth.currentUser()?.username ?? '');
 
-  async logout() {
+  async onLogout() {
     await this.auth.logout();
     this.router.navigate(['/login']);
   }
