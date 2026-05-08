@@ -40,7 +40,12 @@ export class WorkoutsService {
     }
   }
 
-  findAll(opts: { from?: string; to?: string; labelId?: string }) {
+  findAll(opts: {
+    from?: string;
+    to?: string;
+    labelId?: string;
+    limit?: number;
+  }) {
     const where: Prisma.WorkoutWhereInput = {};
     if (opts.labelId) where.labelId = opts.labelId;
     if (opts.from || opts.to) {
@@ -54,6 +59,7 @@ export class WorkoutsService {
       where,
       orderBy: { dateTime: 'desc' },
       include: { label: true },
+      ...(opts.limit !== undefined && { take: opts.limit }),
     });
   }
 

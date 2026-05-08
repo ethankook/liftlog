@@ -26,8 +26,14 @@ export class WorkoutsController {
     @Query('from') from?: string,
     @Query('to') to?: string,
     @Query('labelId') labelId?: string,
+    @Query('limit') limit?: string,
   ) {
-    return this.workoutsService.findAll({ from, to, labelId });
+    return this.workoutsService.findAll({
+      from,
+      to,
+      labelId,
+      limit: limit ? parseInt(limit, 10) : undefined,
+    });
   }
 
   @Get(':id')
