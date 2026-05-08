@@ -8,9 +8,19 @@ import { environment } from '../../../environments/environment.development';
 export class AuthService {
   private http = inject(HttpClient);
   currentUser = signal<null | User>(null);
+  private restorationPromise: Promise<void>;
 
   constructor() {
-    setTimeout(() => this.restoreSession());
+    this.restorationPromise = new Promise<void>((resolve) =>
+      setTimeout(async () => {
+        await this.restoreSession();
+        resolve();
+      }),
+    );
+  }
+
+  waitForRestoration() {
+    return this.restorationPromise;
   }
 
   private storeTokens(tokens: { accessToken: string; refreshToken: string }) {
