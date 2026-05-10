@@ -1,0 +1,9 @@
+:root {
+  --color-background: white;
+  --color-text: black;
+  --color-primary: red;
+  --color-accent: blue;
+  --color-header-background: gray;
+  --color-nav-background: gray;
+  --color-error: red;
+}

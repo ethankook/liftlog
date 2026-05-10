@@ -1,0 +1,17 @@
+<h1>Activity</h1>
+
+@if (loading()) { <p>Loading...</p> }
+@else if (error()) { <p style="color: var(--color-error)">{{ error() }}</p> }
+@else {
+  <div class="list">
+    @for (workout of workouts(); track workout.id) {
+      <app-workout-card
+        [workout]="workout"
+        (select)="openWorkout($event)"
+      />
+    } @empty {
+      <p>No workouts logged yet.</p>
+    }
+  </div>
+
+  }

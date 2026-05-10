@@ -1,0 +1,15 @@
+<div class="card" (click)="select.emit(workout.id)">
+  <h2> {{ workout.title }}</h2>
+
+  @if (workout.label) {
+    <span
+      class="label-name"
+      [style.background-color]=workout.label.color
+    >
+    {{ workout.label.name}}
+  </span>
+
+  }
+
+<p>{{ workout.dateTime | date:'mediumDate' }}</p>
+</div>
