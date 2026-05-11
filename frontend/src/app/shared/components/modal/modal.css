@@ -4,19 +4,21 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
+  padding: 1rem;
+  overflow-y: auto;
   z-index: 200;
 }
 
 .panel {
   background: var(--color-surface);
-  border-radius: 12px 12px 0 0;
-  width: 100%;
-  max-height: 85vh;
+  border-radius: 12px;
+  width: min(100%, 40rem);
+  max-height: calc(100dvh - 2rem);
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1rem;
 }
-
 
 .modal-title {
   margin: 0 0 1rem;

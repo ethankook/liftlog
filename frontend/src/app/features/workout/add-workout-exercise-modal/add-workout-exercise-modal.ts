@@ -22,6 +22,16 @@ export class AddWorkoutExerciseModal implements OnInit {
 
   selectedExercises = signal<string[]>([]);
 
+  toggleSelection(id: string) {
+    this.selectedExercises.update((ids) =>
+      ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id],
+    );
+  }
+
+  isSelected(id: string): boolean {
+    return this.selectedExercises().includes(id);
+  }
+
   muscles = signal<Muscle[]>([]);
   exercises = signal<ExerciseSummary[]>([]);
 

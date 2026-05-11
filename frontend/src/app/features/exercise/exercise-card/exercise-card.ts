@@ -9,5 +9,6 @@ import { ExerciseSummary } from '../../../core/types';
 })
 export class ExerciseCard {
   @Input({ required: true }) exercise!: ExerciseSummary;
+  @Input() selected = false;
   @Output() select = new EventEmitter<string>();
 }

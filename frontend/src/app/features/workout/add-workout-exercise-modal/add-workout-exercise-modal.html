@@ -1,8 +1,8 @@
-<app-modal>
+<app-modal title="Add Exercise" (close)="close.emit()">
 
   <div class="card-list">
     @for (exercise of exercises(); track exercise.id) {
-      <app-exercise-card [exercise]="exercise" />
+      <app-exercise-card [exercise]="exercise" [selected]="isSelected(exercise.id)" (select)="toggleSelection($event)" />
     }
   </div>
 

@@ -60,6 +60,7 @@ export class WorkoutPage {
   async onExerciseDelete(id: string) {
     if (!this.workoutId) return;
     await this.workoutsService.removeExercise(this.workoutId, id);
+    this.workout.update((w) => w ? { ...w, workoutExercises: w.workoutExercises.filter(e => e.id !== id) } : w);
   }
 
   onAddExercise() {
@@ -73,6 +74,13 @@ export class WorkoutPage {
       } catch (err) {
         console.log('Failed to add exercise');
       }
+    }
+
+    try {
+      const refreshed = await this.workoutsService.findOne(this.workoutId);
+      this.workout.set(refreshed);
+    } catch {
+      console.log("Failed to refresh workout after adding exercises")
     }
     this.addModalOpen.set(false);
   }
