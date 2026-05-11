@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-action-button',
+  selector: 'app-button',
   imports: [],
   templateUrl: './action-button.html',
   styleUrl: './action-button.css',
 })
-export class ActionButton {
+export class Button {
   @Input({ required: true }) label!: string;
+  @Input({ required: true }) variant!: 'create' | 'update' | 'delete' | 'cancel';
   @Output() action = new EventEmitter<void>();
 }

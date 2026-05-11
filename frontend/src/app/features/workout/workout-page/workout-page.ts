@@ -3,12 +3,12 @@ import { WorkoutsService } from '../../../core/services/workouts';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WorkoutDetail } from '../../../core/types';
 import { WorkoutExerciseCard } from '../workout-exercise-card/workout-exercise-card';
-import { ActionButton } from '../../../shared/components/action-button/action-button';
+import { Button } from '../../../shared/components/action-button/action-button';
 import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-workout-page',
-  imports: [WorkoutExerciseCard, ActionButton, DatePipe],
+  imports: [WorkoutExerciseCard, Button, DatePipe],
   templateUrl: './workout-page.html',
   styleUrl: './workout-page.css',
 })

@@ -1,0 +1,8 @@
+<div class="backdrop" (click)="close.emit()">
+  <div class="panel" (click)="$event.stopPropagation()">
+    @if (title) {
+      <h2 class="modal-title">{{ title }}</h2>
+    }
+    <ng-content />
+  </div>
+</div>

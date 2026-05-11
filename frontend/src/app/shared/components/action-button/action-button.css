@@ -1,0 +1,31 @@
+button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+}
+
+
+.create {
+  background-color: var(--color-btn-create-bg);
+  color: var(--color-btn-create-text);
+  border-color: var(--color-btn-create-bg);
+}
+
+.update {
+  background-color: var(--color-btn-update-bg);
+  color: var(--color-btn-update-text);
+  border-color: var(--color-btn-update-bg);
+}
+
+.delete {
+  background-color: var(--color-btn-delete-bg);
+  color: var(--color-btn-delete-text);
+  border-color: var(--color-btn-delete-bg);
+}
+
+.cancel {
+  background-color: var(--color-btn-cancel-bg);
+  color: var(--color-btn-cancel-text);
+  border-color: var(--color-btn-cancel-bg);
+}

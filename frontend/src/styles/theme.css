@@ -6,4 +6,14 @@
   --color-header-background: gray;
   --color-nav-background: gray;
   --color-error: red;
+  --color-surface: white;
+
+  --color-btn-create-bg: #22c55e;
+  --color-btn-create-text: white;
+  --color-btn-update-bg: #3b82f6;
+  --color-btn-update-text: white;
+  --color-btn-delete-bg: #ef4444;
+  --color-btn-delete-text: white;
+  --color-btn-cancel-bg: #6b7280;
+  --color-btn-cancel-text: white;
 }

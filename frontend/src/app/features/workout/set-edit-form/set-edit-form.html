@@ -1,0 +1,20 @@
+
+@for (entry of set.values | keyvalue; track entry.key) {
+  <label>
+    {{ entry.key }}
+    <input type="number" [value]="entry.value" (blur)="onValueChange(entry.key, $event)" />
+  </label>
+}
+
+<label>
+  Notes
+  <textarea [value]="localNotes" (blur)="onNotesChange($event)"></textarea>
+</label>
+
+<app-button variant="update" label="Save" (action)="save.emit({
+  setId: set.id,
+  values: localValues,
+  notes: localNotes
+})" />
+<app-button variant="delete" label="Delete" (action)="delete.emit(set.id)" />
+<app-button variant="cancel" label="Cancel" (action)="cancel.emit()" />
