@@ -1,0 +1,52 @@
+@if (loading()) {
+  <p>Loading...</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (workout(); as w) {
+
+  <section class="header">
+    <input
+      type="text"
+      [value]="w.title"
+      (blur)="updateField('title', $event)"
+    />
+
+    @if (w.label) {
+      <span class="label" [style.color]="w.label.color">{{ w.label.name }}</span>
+    }
+
+    <p class="date">{{ w.dateTime | date:'medium' }}</p>
+
+    <label>
+      Body Weight
+      <input
+        type="number"
+        [value]="w.bodyWeight"
+        (blur)="updateField('bodyWeight', $event)"
+      />
+    </label>
+
+    <label>
+      Notes
+      <textarea
+        [value]="w.notes ?? ''"
+        (blur)="updateField('notes', $event)"
+      ></textarea>
+    </label>
+  </section>
+
+  <section class="exercises">
+    @for (we of w.workoutExercises; track we.id) {
+      <app-workout-exercise-card
+        [workoutExercise]="we"
+        (select)="onExerciseSelect($event)"
+        (delete)="onExerciseDelete($event)"
+      />
+    } @empty {
+      <p>No exercises added yet.</p>
+    }
+
+    <app-action-button label="Add Exercise" (action)="onAddExercise()" />
+  </section>
+
+}

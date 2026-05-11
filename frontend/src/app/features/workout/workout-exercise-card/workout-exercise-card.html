@@ -1,0 +1,8 @@
+<div class="card" (click)="select.emit(workoutExercise.id)">
+  <h2> {{ workoutExercise.exercise.name }}</h2>
+  <h3>{{ workoutExercise.exercise.primaryMuscle.name }}</h3>
+
+  <button (click)="$event.stopPropagation(); delete.emit(workoutExercise.id)">
+    Delete
+  </button>
+</div>
