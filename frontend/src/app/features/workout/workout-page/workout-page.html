@@ -35,6 +35,9 @@
     </label>
   </section>
 
+@if (addModalOpen()) {
+  <app-add-workout-exercise-modal [workoutId]="w.id" (close)="addModalOpen.set(false)" (added)="onExerciseAdded($event)" />
+}
   <section class="exercises">
     @for (we of w.workoutExercises; track we.id) {
       <app-workout-exercise-card

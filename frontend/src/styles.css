@@ -18,3 +18,10 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
+
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}

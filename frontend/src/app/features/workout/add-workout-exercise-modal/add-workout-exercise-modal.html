@@ -1,0 +1,12 @@
+<app-modal>
+
+  <div class="card-list">
+    @for (exercise of exercises(); track exercise.id) {
+      <app-exercise-card [exercise]="exercise" />
+    }
+  </div>
+
+
+
+  <app-button variant="create" label="Add Exercise" (action)="added.emit(selectedExercises())" />
+</app-modal>

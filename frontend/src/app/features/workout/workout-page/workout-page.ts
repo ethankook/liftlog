@@ -5,10 +5,11 @@ import { WorkoutDetail } from '../../../core/types';
 import { WorkoutExerciseCard } from '../workout-exercise-card/workout-exercise-card';
 import { Button } from '../../../shared/components/action-button/action-button';
 import { DatePipe } from '@angular/common';
+import { AddWorkoutExerciseModal } from '../add-workout-exercise-modal/add-workout-exercise-modal';
 
 @Component({
   selector: 'app-workout-page',
-  imports: [WorkoutExerciseCard, Button, DatePipe],
+  imports: [WorkoutExerciseCard, Button, DatePipe, AddWorkoutExerciseModal],
   templateUrl: './workout-page.html',
   styleUrl: './workout-page.css',
 })
@@ -21,6 +22,8 @@ export class WorkoutPage {
   workout = signal<WorkoutDetail | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+
+  addModalOpen = signal<boolean>(false);
 
   async ngOnInit() {
     const id = this.route.snapshot.params['id'];
@@ -60,6 +63,17 @@ export class WorkoutPage {
   }
 
   onAddExercise() {
-    console.log('TODO: open exercise picker');
+    this.addModalOpen.set(true);
+  }
+
+  async onExerciseAdded(ids: string[]) {
+    for (const id of ids) {
+      try {
+        await this.workoutsService.addExercise(this.workoutId, { exerciseId: id });
+      } catch (err) {
+        console.log('Failed to add exercise');
+      }
+    }
+    this.addModalOpen.set(false);
   }
 }

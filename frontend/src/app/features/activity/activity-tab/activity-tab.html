@@ -3,7 +3,7 @@
 @if (loading()) { <p>Loading...</p> }
 @else if (error()) { <p style="color: var(--color-error)">{{ error() }}</p> }
 @else {
-  <div class="list">
+  <div class="card-list">
     @for (workout of workouts(); track workout.id) {
       <app-workout-card
         [workout]="workout"
