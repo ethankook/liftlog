@@ -55,7 +55,8 @@ export class WorkoutPage {
   }
 
   async onExerciseDelete(id: string) {
-    console.log('TODO: delete exercise', id);
+    if (!this.workoutId) return;
+    await this.workoutsService.removeExercise(this.workoutId, id);
   }
 
   onAddExercise() {

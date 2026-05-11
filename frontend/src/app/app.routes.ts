@@ -27,6 +27,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/activity/activity-tab/activity-tab').then((m) => m.ActivityTab),
       },
+      {
+        path: 'workouts/:id',
+        loadComponent: () =>
+          import('./features/workout/workout-page/workout-page').then((m) => m.WorkoutPage),
+      },
     ],
   },
 ];
