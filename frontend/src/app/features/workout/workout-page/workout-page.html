@@ -38,10 +38,18 @@
 @if (addModalOpen()) {
   <app-add-workout-exercise-modal [workoutId]="w.id" (close)="addModalOpen.set(false)" (added)="onExerciseAdded($event)" />
 }
+@if (selectedWorkoutExercise()) {
+  <app-we-modal
+    [workoutExercise]="selectedWorkoutExercise()!"
+    [workoutId]="workoutId"
+    (close)="onWeModalClose()"
+  />
+}
   <section class="card-list">
     @for (we of w.workoutExercises; track we.id) {
       <app-workout-exercise-card
         [workoutExercise]="we"
+        (select)="onExerciseSelect($event)"
         (delete)="onExerciseDelete($event)"
       />
     } @empty {
