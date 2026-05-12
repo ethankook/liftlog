@@ -106,8 +106,8 @@ export class WorkoutPage {
     this.addModalOpen.set(false);
   }
 
-  async onDeleteWorkout(id: string) {
-    await this.workoutsService.remove(id);
-    this.router.createUrlTree(['activity']);
+  async onDeleteWorkout() {
+    await this.workoutsService.remove(this.workoutId);
+    this.router.navigate(['activity']);
   }
 }
