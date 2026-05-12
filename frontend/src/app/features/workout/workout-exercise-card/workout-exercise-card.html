@@ -1,8 +1,8 @@
 <div class="card" (click)="select.emit(workoutExercise.id)">
   <h2> {{ workoutExercise.exercise.name }}</h2>
   <h3>{{ workoutExercise.exercise.primaryMuscle.name }}</h3>
+  <p>{{ workoutExercise.sets.length }} sets</p>
 
-  <button (click)="$event.stopPropagation(); delete.emit(workoutExercise.id)">
-    Delete
-  </button>
+
+  <app-button variant="delete" label="Remove" (action)="delete.emit(workoutExercise.id)" (click)="$event.stopPropagation(); delete.emit(workoutExercise.id)"> </app-button>
 </div>

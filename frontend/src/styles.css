@@ -12,6 +12,9 @@ body {
 
 .card {
   margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  width: 200px;
 }
 .card:hover {
   background-color: lightgray;
@@ -23,5 +26,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
-  padding: 1rem 0;
+  margin-top: 1rem;
+  border: 1px solid black;
 }

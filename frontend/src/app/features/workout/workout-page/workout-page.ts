@@ -53,14 +53,12 @@ export class WorkoutPage {
     this.workout.update((w) => (w ? { ...w, [field]: value } : w));
   }
 
-  onExerciseSelect(id: string) {
-    console.log('TODO: open modal for exercise', id);
-  }
-
   async onExerciseDelete(id: string) {
     if (!this.workoutId) return;
     await this.workoutsService.removeExercise(this.workoutId, id);
-    this.workout.update((w) => w ? { ...w, workoutExercises: w.workoutExercises.filter(e => e.id !== id) } : w);
+    this.workout.update((w) =>
+      w ? { ...w, workoutExercises: w.workoutExercises.filter((e) => e.id !== id) } : w,
+    );
   }
 
   onAddExercise() {
@@ -80,7 +78,7 @@ export class WorkoutPage {
       const refreshed = await this.workoutsService.findOne(this.workoutId);
       this.workout.set(refreshed);
     } catch {
-      console.log("Failed to refresh workout after adding exercises")
+      console.log('Failed to refresh workout after adding exercises');
     }
     this.addModalOpen.set(false);
   }

@@ -38,18 +38,17 @@
 @if (addModalOpen()) {
   <app-add-workout-exercise-modal [workoutId]="w.id" (close)="addModalOpen.set(false)" (added)="onExerciseAdded($event)" />
 }
-  <section class="exercises">
+  <section class="card-list">
     @for (we of w.workoutExercises; track we.id) {
       <app-workout-exercise-card
         [workoutExercise]="we"
-        (select)="onExerciseSelect($event)"
         (delete)="onExerciseDelete($event)"
       />
     } @empty {
       <p>No exercises added yet.</p>
     }
 
-    <app-button variant="create" label="Add Exercise" (action)="onAddExercise()" />
   </section>
+  <app-button variant="create" label="Add Exercise" (action)="onAddExercise()" />
 
 }
