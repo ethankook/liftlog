@@ -24,6 +24,7 @@ export class WeModal implements OnInit {
   sets = signal<SetEntry[]>([]);
   editingSetId = signal<string | null>(null);
   trackedFieldKeys = signal<string[]>([]);
+  trackedFieldLabels = signal<Record<string, string>>({});
   loading = signal(true);
 
   async ngOnInit() {
@@ -31,6 +32,9 @@ export class WeModal implements OnInit {
     try {
       const detail = await this.exercisesService.findOne(this.workoutExercise.exerciseId);
       this.trackedFieldKeys.set(detail.trackedFields.map((f) => f.key));
+      this.trackedFieldLabels.set(
+        Object.fromEntries(detail.trackedFields.map((f) => [f.key, f.label])),
+      );
     } catch {
       // trackedFieldKeys stays empty; existing sets are still editable
     } finally {

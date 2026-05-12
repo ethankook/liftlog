@@ -1,32 +1,33 @@
 button {
   cursor: pointer;
   padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+  border: none;
+  border-radius: 0.375rem;
   font-weight: bold;
-  margin-top: 1rem;
+  font-size: var(--text-sm);
+  transition: opacity 0.15s ease, filter 0.15s ease;
 }
 
+button:hover {
+  filter: brightness(0.92);
+}
 
 .create {
   background-color: var(--color-btn-create-bg);
   color: var(--color-btn-create-text);
-  border-color: var(--color-btn-create-bg);
 }
 
 .update {
   background-color: var(--color-btn-update-bg);
   color: var(--color-btn-update-text);
-  border-color: var(--color-btn-update-bg);
 }
 
 .delete {
   background-color: var(--color-btn-delete-bg);
   color: var(--color-btn-delete-text);
-  border-color: var(--color-btn-delete-bg);
 }
 
 .cancel {
   background-color: var(--color-btn-cancel-bg);
   color: var(--color-btn-cancel-text);
-  border-color: var(--color-btn-cancel-bg);
 }

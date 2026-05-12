@@ -9,10 +9,10 @@
       type="text"
       [value]="w.title"
       (blur)="updateField('title', $event)"
-    />
+    /> <br>
 
     @if (w.label) {
-      <span class="label" [style.color]="w.label.color">{{ w.label.name }}</span>
+      <span class="label" [style.color]="w.label.color">{{ w.label.name }}</span><br>
     }
 
     <p class="date">{{ w.dateTime | date:'medium' }}</p>
@@ -24,7 +24,7 @@
         [value]="w.bodyWeight"
         (blur)="updateField('bodyWeight', $event)"
       />
-    </label>
+    </label><br>
 
     <label>
       Notes
@@ -32,7 +32,7 @@
         [value]="w.notes ?? ''"
         (blur)="updateField('notes', $event)"
       ></textarea>
-    </label>
+    </label><br>
   </section>
 
 @if (addModalOpen()) {

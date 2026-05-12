@@ -1,19 +1,32 @@
 :root {
-  --color-background: white;
-  --color-text: black;
-  --color-primary: purple;
-  --color-accent: blue;
-  --color-header-background: gray;
-  --color-nav-background: gray;
-  --color-error: red;
-  --color-surface: white;
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
 
-  --color-btn-create-bg: #22c55e;
-  --color-btn-create-text: white;
-  --color-btn-update-bg: #3b82f6;
-  --color-btn-update-text: white;
-  --color-btn-delete-bg: #ef4444;
-  --color-btn-delete-text: white;
-  --color-btn-cancel-bg: #6b7280;
-  --color-btn-cancel-text: white;
+  --text-xs:   0.625rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.618rem;
+  --text-2xl:  2.618rem;
+
+  --color-background: #131110;
+  --color-surface: #1e1b18;
+  --color-text: #f2ede6;
+  --color-text-muted: #8a837a;
+  --color-border: #2c2824;
+  --color-primary: #f5a623;
+  --color-accent: #f5a623;
+  --color-error: #e85d4a;
+  --color-header-background: #1e1b18;
+  --color-nav-background: #1e1b18;
+  --color-card-hover: #282420;
+
+  --color-btn-create-bg: #3d9e5f;
+  --color-btn-create-text: #f2ede6;
+  --color-btn-update-bg: #4a7fd4;
+  --color-btn-update-text: #f2ede6;
+  --color-btn-delete-bg: #e85d4a;
+  --color-btn-delete-text: #f2ede6;
+  --color-btn-cancel-bg: #2c2824;
+  --color-btn-cancel-text: #8a837a;
 }

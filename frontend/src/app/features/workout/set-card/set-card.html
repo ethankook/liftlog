@@ -5,7 +5,7 @@
   (click)="select.emit(set.id)"
 >
   @for (entry of set.values | keyvalue; track entry.key) {
-    <span>{{ entry.key }}: {{ entry.value }}</span><br>
+    <span>{{ fieldLabels[entry.key] ?? entry.key }}: {{ entry.value }}</span><br>
   }
   @if (set.notes) {
     <p>Notes: {{ set.notes }}</p>

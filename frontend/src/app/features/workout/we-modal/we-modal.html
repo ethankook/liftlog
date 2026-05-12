@@ -7,12 +7,18 @@
         @if (editingSetId() === set.id) {
           <app-set-edit-form
             [set]="set"
+            [fieldLabels]="trackedFieldLabels()"
             (save)="onSetSave($event)"
             (cancel)="editingSetId.set(null)"
             (delete)="onSetDelete($event)"
           />
         } @else {
-          <app-set-card variant="row" [set]="set" (select)="editingSetId.set($event)" />
+          <app-set-card
+            variant="row"
+            [set]="set"
+            [fieldLabels]="trackedFieldLabels()"
+            (select)="editingSetId.set($event)"
+          />
         }
       } @empty {
         <p>No sets logged yet.</p>
