@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HalfWheel } from '../half-wheel/half-wheel';
+
+export type CreateEntityKind = 'exercise' | 'workout' | 'label';
 
 @Component({
   selector: 'app-tab-bar',
@@ -9,6 +11,7 @@ import { HalfWheel } from '../half-wheel/half-wheel';
   styleUrl: './tab-bar.css',
 })
 export class TabBar {
+  @Output() createAction = new EventEmitter<CreateEntityKind>();
   protected readonly createWheelOpen = signal(false);
 
   protected toggleCreateWheel(event: Event) {
@@ -20,8 +23,8 @@ export class TabBar {
     this.createWheelOpen.set(false);
   }
 
-  protected onCreateAction(action: 'exercise' | 'workout' | 'label') {
+  protected onCreateAction(action: CreateEntityKind) {
     this.createWheelOpen.set(false);
-    console.log(`Open create ${action} modal here`);
+    this.createAction.emit(action);
   }
 }

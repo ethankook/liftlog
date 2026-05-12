@@ -4,4 +4,8 @@
   <router-outlet />
 </main>
 
-<app-tab-bar />
+<app-tab-bar (createAction)="openCreateModal($event)" />
+
+@if (activeCreateModal()) {
+  <!-- create modal will be rendered here in step 2 -->
+}

@@ -1,7 +1,7 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Router, RouterOutlet } from '@angular/router';
-import { TabBar } from '../tab-bar/tab-bar';
+import { CreateEntityKind, TabBar } from '../tab-bar/tab-bar';
 import { Header } from '../header/header';
 
 @Component({
@@ -14,6 +14,15 @@ export class AppShell {
   private auth = inject(AuthService);
   private router = inject(Router);
   username = computed(() => this.auth.currentUser()?.username ?? '');
+  protected readonly activeCreateModal = signal<CreateEntityKind | null>(null);
+
+  protected openCreateModal(kind: CreateEntityKind) {
+    this.activeCreateModal.set(kind);
+  }
+
+  protected closeCreateModal() {
+    this.activeCreateModal.set(null);
+  }
 
   async onLogout() {
     await this.auth.logout();
