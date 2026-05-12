@@ -1,8 +1,13 @@
-<div class="card" (click)="select.emit(set.id)">
+<div
+  class="card"
+  [class.card--grid]="variant === 'grid'"
+  [class.card--row]="variant === 'row'"
+  (click)="select.emit(set.id)"
+>
   @for (entry of set.values | keyvalue; track entry.key) {
-    <span>{{ entry.key }}: {{ entry.value }}</span>
+    <span>{{ entry.key }}: {{ entry.value }}</span><br>
   }
   @if (set.notes) {
-    <p>{{ set.notes }}</p>
+    <p>Notes: {{ set.notes }}</p>
   }
 </div>

@@ -2,7 +2,7 @@
   @if (loading()) {
     <p>Loading...</p>
   } @else {
-    <div class="card-list">
+    <div class="card-list card-list--row">
       @for (set of sets(); track set.id) {
         @if (editingSetId() === set.id) {
           <app-set-edit-form
@@ -12,12 +12,15 @@
             (delete)="onSetDelete($event)"
           />
         } @else {
-          <app-set-card [set]="set" (select)="editingSetId.set($event)" />
+          <app-set-card variant="row" [set]="set" (select)="editingSetId.set($event)" />
         }
       } @empty {
         <p>No sets logged yet.</p>
       }
     </div>
-    <app-button variant="create" label="Add Set" (action)="addSet()" />
+    @if (!editingSetId()) {
+      <app-button variant="create" label="Add Set" (action)="addSet()" />
+
+    }
   }
 </app-modal>

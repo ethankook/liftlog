@@ -11,6 +11,7 @@ import { WorkoutsService } from '../../../core/services/workouts';
 })
 export class WorkoutExerciseCard {
   @Input({ required: true }) workoutExercise!: WorkoutExerciseDetail;
+  @Input() variant: 'grid' | 'row' = 'row';
   @Output() select = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
 

@@ -4,17 +4,16 @@
 body {
   background-color: var(--color-background);
   color: var(--color-text);
-  margin-top: 40px;
-  margin-bottom: 40px;
-  padding: 20px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
   overflow-y: auto;
 }
 
 .card {
-  margin: 1rem;
   padding: 1rem;
-  border: 1px solid #ccc;
-  width: 200px;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.5rem;
 }
 .card:hover {
   background-color: lightgray;
@@ -23,9 +22,32 @@ body {
 }
 
 .card-list {
+  padding-top: 1rem;
+}
+
+.card-list--grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   gap: 1rem;
-  margin-top: 1rem;
-  border: 1px solid black;
+}
+
+.card-list--row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.card-list--row > * {
+  display: block;
+  width: 100%;
+}
+
+.card--grid {
+  aspect-ratio: 1/1;
+  padding: 1rem;
+}
+
+.card--row {
+  width: 100%;
+  box-sizing: border-box;
 }

@@ -1,4 +1,9 @@
-<div class="card" (click)="select.emit(workoutExercise.id)">
+<div
+  class="card"
+  [class.card--grid]="variant === 'grid'"
+  [class.card--row]="variant === 'row'"
+  (click)="select.emit(workoutExercise.id)"
+>
   <h2> {{ workoutExercise.exercise.name }}</h2>
   <h3>{{ workoutExercise.exercise.primaryMuscle.name }}</h3>
   <p>{{ workoutExercise.sets.length }} sets</p>

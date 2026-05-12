@@ -10,5 +10,6 @@ import { DatePipe } from '@angular/common';
 })
 export class WorkoutCard {
   @Input({ required: true }) workout!: WorkoutSummary;
+  @Input() variant: 'grid' | 'row' = 'row';
   @Output() select = new EventEmitter<string>();
 }

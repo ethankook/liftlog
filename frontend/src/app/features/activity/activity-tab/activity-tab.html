@@ -3,9 +3,10 @@
 @if (loading()) { <p>Loading...</p> }
 @else if (error()) { <p style="color: var(--color-error)">{{ error() }}</p> }
 @else {
-  <div class="card-list">
+  <div class="card-list card-list--row">
     @for (workout of workouts(); track workout.id) {
       <app-workout-card
+        variant="row"
         [workout]="workout"
         (select)="openWorkout($event)"
       />

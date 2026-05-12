@@ -45,9 +45,10 @@
     (close)="onWeModalClose()"
   />
 }
-  <section class="card-list">
+  <section class="card-list card-list--row">
     @for (we of w.workoutExercises; track we.id) {
       <app-workout-exercise-card
+        variant="row"
         [workoutExercise]="we"
         (select)="onExerciseSelect($event)"
         (delete)="onExerciseDelete($event)"
