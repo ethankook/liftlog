@@ -130,3 +130,60 @@ textarea {
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
+
+.entity-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.field-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.field-error {
+  margin: 0;
+  font-size: var(--text-sm, 0.875rem);
+  color: #ef4444;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.form-actions button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.form-actions button:not(:disabled):hover {
+  transform: translateY(-0.0625rem);
+  filter: brightness(1.05);
+}
+
+.form-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.create {
+  background-color: var(--color-btn-create-bg);
+  color: var(--color-btn-create-text);
+}
+
+.cancel {
+  background-color: var(--color-btn-cancel-bg);
+  color: var(--color-btn-cancel-text);
+}
+
+.muscle-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

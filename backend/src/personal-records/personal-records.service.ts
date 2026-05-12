@@ -2,6 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, PRType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
+const PR_WEIGHT = 'WEIGHT' as PRType;
+const PR_PACE = 'PACE' as PRType;
+const PR_REPS = 'REPS' as PRType;
+const PR_DISTANCE = 'DISTANCE' as PRType;
+
 type Candidate = {
   setId: string;
   value: number;
@@ -43,9 +48,10 @@ export class PersonalRecordsService {
 
     const keys = new Set(exercise.trackedFields.map((f) => f.key));
     const types: PRType[] = [];
-    if (keys.has('weight')) types.push(PRType.WEIGHT);
-    if (keys.has('distance') && keys.has('time')) types.push(PRType.PACE);
-    else if (keys.has('distance')) types.push(PRType.DISTANCE);
+    if (keys.has('weight')) types.push(PR_WEIGHT);
+    if (keys.has('distance') && keys.has('time')) types.push(PR_PACE);
+    if (keys.has('reps')) types.push(PR_REPS);
+    if (keys.has('distance') && !keys.has('time')) types.push(PR_DISTANCE);
     if (types.length === 0) {
       await this.prisma.client.personalRecord.deleteMany({
         where: { exerciseId },
@@ -105,7 +111,7 @@ export class PersonalRecordsService {
     const date = set.workoutExercise.workout.dateTime;
     const num = (k: string) => (typeof v[k] === 'number' ? v[k] : null);
 
-    if (type === PRType.WEIGHT) {
+    if (type === PR_WEIGHT) {
       const weight = num('weight');
       if (weight === null) return null;
       return {
@@ -116,7 +122,7 @@ export class PersonalRecordsService {
         date,
       };
     }
-    if (type === PRType.PACE) {
+    if (type === PR_PACE) {
       const distance = num('distance');
       const time = num('time');
       if (distance === null || time === null || distance === 0) return null;
@@ -128,7 +134,18 @@ export class PersonalRecordsService {
         date,
       };
     }
-    if (type === PRType.DISTANCE) {
+    if (type === PR_REPS) {
+      const reps = num('reps');
+      if (reps === null) return null;
+      return {
+        setId: set.id,
+        value: reps,
+        reps,
+        snapshot: v as Prisma.InputJsonValue,
+        date,
+      };
+    }
+    if (type === PR_DISTANCE) {
       const distance = num('distance');
       if (distance === null) return null;
       return {
@@ -143,13 +160,13 @@ export class PersonalRecordsService {
   }
 
   private beats(type: PRType, a: Candidate, b: Candidate): boolean {
-    if (type === PRType.WEIGHT) {
+    if (type === PR_WEIGHT) {
       if (a.value > b.value) return true;
       if (a.value < b.value) return false;
       return (a.reps ?? 0) > (b.reps ?? 0);
     }
-    if (type === PRType.PACE) return a.value < b.value;
-    if (type === PRType.DISTANCE) return a.value > b.value;
+    if (type === PR_PACE) return a.value < b.value;
+    if (type === PR_REPS || type === PR_DISTANCE) return a.value > b.value;
     return false;
   }
 }

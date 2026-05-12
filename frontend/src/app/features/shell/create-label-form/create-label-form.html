@@ -28,9 +28,18 @@
   </div>
 
   <div class="form-actions">
+    @if (showDelete) {
+      <button type="button" class="delete" [disabled]="!canDelete()" (click)="deleteEntity.emit()">
+        {{ loading ? 'Removing...' : 'Remove' }}
+      </button>
+    }
     <button type="button" class="cancel" (click)="cancel.emit()">Cancel</button>
     <button type="submit" class="create" [disabled]="!canSubmit()">
-      {{ loading ? 'Creating...' : 'Create Label' }}
+      {{
+        loading
+          ? (mode === 'edit' ? 'Saving...' : 'Creating...')
+          : (mode === 'edit' ? 'Save Label' : 'Create Label')
+      }}
     </button>
   </div>
 </form>

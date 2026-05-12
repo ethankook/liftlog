@@ -1,9 +1,3 @@
 .selected {
   outline: 0.125rem solid var(--card-accent, currentColor);
 }
-
-.muscle-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}

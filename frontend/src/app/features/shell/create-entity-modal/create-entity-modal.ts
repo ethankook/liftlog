@@ -9,6 +9,8 @@ import {
   ExerciseSummary,
   Muscle,
   TrackingField,
+  UpdateExerciseDto,
+  UpdateWorkoutLabelDto,
   WorkoutLabel,
 } from '../../../core/types';
 import { CreateWorkoutForm } from '../create-workout-form/create-workout-form';
@@ -64,8 +66,8 @@ export class CreateEntityModal implements OnInit {
     }
   }
 
-  async submitExercise(exercise: CreateExerciseDto) {
-    const data = await this.exercisesService.create(exercise);
+  async submitExercise(exercise: CreateExerciseDto | UpdateExerciseDto) {
+    const data = await this.exercisesService.create(exercise as CreateExerciseDto);
     this.created.emit({ id: data.id, kind: 'exercise' });
   }
 
@@ -74,8 +76,8 @@ export class CreateEntityModal implements OnInit {
     this.created.emit({ id: data.id, kind: 'workout' });
   }
 
-  async submitLabel(label: CreateWorkoutLabelDto) {
-    const data = await this.workoutLabelsService.create(label);
+  async submitLabel(label: CreateWorkoutLabelDto | UpdateWorkoutLabelDto) {
+    const data = await this.workoutLabelsService.create(label as CreateWorkoutLabelDto);
     this.created.emit({ id: data.id, kind: 'label' });
   }
 }

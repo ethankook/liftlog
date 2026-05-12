@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CreateExerciseDto, Muscle, MuscleGroup, TrackingField } from '../../../core/types';
+import {
+  CreateExerciseDto,
+  ExerciseDetail,
+  Muscle,
+  MuscleGroup,
+  TrackingField,
+  UpdateExerciseDto,
+} from '../../../core/types';
 
 const MUSCLE_GROUP_ORDER: MuscleGroup[] = [
   'CHEST',
@@ -24,14 +31,26 @@ export class CreateExerciseForm {
   @Input({ required: true }) trackingFields: TrackingField[] = [];
   @Input() existingNames: string[] = [];
   @Input() loading = false;
+  @Input() mode: 'create' | 'edit' = 'create';
+  @Input() initialExercise: ExerciseDetail | null = null;
 
-  @Output() submitForm = new EventEmitter<CreateExerciseDto>();
+  @Output() submitForm = new EventEmitter<CreateExerciseDto | UpdateExerciseDto>();
   @Output() cancel = new EventEmitter<void>();
 
   protected name = '';
   protected primaryMuscleId = '';
   protected secondaryMuscleIds: string[] = [];
   protected trackedFieldIds: string[] = [];
+
+  ngOnInit() {
+    this.syncFromInitialExercise();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['initialExercise']) {
+      this.syncFromInitialExercise();
+    }
+  }
 
   protected get muscleGroups(): { group: MuscleGroup; muscles: Muscle[] }[] {
     const map = new Map<MuscleGroup, Muscle[]>();
@@ -93,18 +112,38 @@ export class CreateExerciseForm {
   protected onSubmit() {
     if (!this.canSubmit()) return;
 
-    this.submitForm.emit({
+    const payload = {
       name: this.name.trim(),
       primaryMuscleId: this.primaryMuscleId,
       secondaryMuscleIds: this.secondaryMuscleIds.length ? this.secondaryMuscleIds : undefined,
       trackedFieldIds: this.trackedFieldIds.length ? this.trackedFieldIds : undefined,
-    });
+    };
+
+    this.submitForm.emit(payload);
   }
 
   private isDuplicateName(name: string): boolean {
     const normalizedName = name.toLocaleLowerCase();
+    const initialName = this.initialExercise?.name.trim().toLocaleLowerCase();
     return this.existingNames.some(
-      (existingName) => existingName.trim().toLocaleLowerCase() === normalizedName,
+      (existingName) =>
+        existingName.trim().toLocaleLowerCase() === normalizedName &&
+        existingName.trim().toLocaleLowerCase() !== initialName,
     );
+  }
+
+  private syncFromInitialExercise() {
+    if (!this.initialExercise) {
+      this.name = '';
+      this.primaryMuscleId = '';
+      this.secondaryMuscleIds = [];
+      this.trackedFieldIds = [];
+      return;
+    }
+
+    this.name = this.initialExercise.name;
+    this.primaryMuscleId = this.initialExercise.primaryMuscleId;
+    this.secondaryMuscleIds = this.initialExercise.secondaryMuscles.map((muscle) => muscle.id);
+    this.trackedFieldIds = this.initialExercise.trackedFields.map((field) => field.id);
   }
 }

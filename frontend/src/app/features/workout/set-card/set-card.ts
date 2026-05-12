@@ -12,5 +12,6 @@ export class SetCard {
   @Input({ required: true }) set!: SetEntry;
   @Input() fieldLabels: Partial<Record<string, string>> = {};
   @Input() variant: 'grid' | 'row' = 'row';
+  @Input() caption: string | null = null;
   @Output() select = new EventEmitter<string>();
 }

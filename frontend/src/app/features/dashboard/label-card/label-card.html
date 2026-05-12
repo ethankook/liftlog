@@ -1,0 +1,9 @@
+<button
+  type="button"
+  class="card label-card"
+  [style.border-color]="label.color"
+  [style.--label-color]="label.color"
+  (click)="select.emit(label.id)"
+>
+  <span class="label-name">{{ label.name }}</span>
+</button>

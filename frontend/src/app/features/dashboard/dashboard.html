@@ -1,1 +1,163 @@
 <h1>Dashboard</h1>
+
+@if (loading()) {
+  <p>Loading...</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else {
+  <section class="dashboard-section">
+    <div class="section-heading">
+      <div>
+        <h2>Exercises</h2>
+        <p>Browse every exercise and jump straight into its current stats.</p>
+      </div>
+      <span class="section-count">{{ filteredExercises().length }}</span>
+    </div>
+
+    <div class="filter-row filter-row--exercise">
+      <input
+        type="text"
+        placeholder="Search exercises or muscles"
+        [ngModel]="exerciseSearch()"
+        (ngModelChange)="exerciseSearch.set($event)"
+      >
+      <select
+        [ngModel]="exerciseMuscleGroup()"
+        (ngModelChange)="updateMuscleGroup($event)"
+      >
+        <option value="">All muscle groups</option>
+        @for (group of muscleGroups(); track group) {
+          <option [value]="group">{{ group }}</option>
+        }
+      </select>
+      <select
+        [ngModel]="exerciseMuscleId()"
+        (ngModelChange)="exerciseMuscleId.set($event)"
+      >
+        <option value="">All muscles</option>
+        @for (muscle of musclesForSelectedGroup(); track muscle.id) {
+          <option [value]="muscle.id">{{ muscle.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="card-list card-list--grid">
+      @for (exercise of filteredExercises(); track exercise.id) {
+        <app-exercise-card
+          variant="grid"
+          [exercise]="exercise"
+          (select)="openExercise($event)"
+        />
+      } @empty {
+        <p class="empty-state">No exercises match the current filters.</p>
+      }
+    </div>
+  </section>
+
+  <section class="dashboard-section">
+    <div class="section-heading">
+      <div>
+        <h2>Labels</h2>
+        <p>Manage workout labels without leaving the dashboard.</p>
+      </div>
+      <span class="section-count">{{ filteredLabels().length }}</span>
+    </div>
+
+    <div class="filter-row">
+      <input
+        type="text"
+        placeholder="Search labels"
+        [ngModel]="labelSearch()"
+        (ngModelChange)="labelSearch.set($event)"
+      >
+    </div>
+
+    <div class="card-list card-list--grid">
+      @for (label of filteredLabels(); track label.id) {
+        <app-label-card [label]="label" (select)="openLabel($event)" />
+      } @empty {
+        <p class="empty-state">No labels match the current search.</p>
+      }
+    </div>
+  </section>
+}
+
+@if (selectedExerciseId()) {
+  <app-modal [title]="selectedExerciseTitle()" (close)="closeExerciseModal()">
+    @if (exerciseModalLoading()) {
+      <p>Loading exercise details...</p>
+    } @else if (selectedExerciseDetail(); as exercise) {
+      @if (exerciseEditMode()) {
+        <app-create-exercise-form
+          mode="edit"
+          [initialExercise]="exercise"
+          [muscles]="muscles()"
+          [trackingFields]="trackingFields()"
+          [existingNames]="exercises().map((entry) => entry.name)"
+          [loading]="exerciseActionLoading()"
+          (submitForm)="saveExercise($event)"
+          (cancel)="exerciseEditMode.set(false); exerciseModalError.set(null)"
+        />
+      } @else {
+        <div class="detail-stack">
+          <section class="detail-section">
+            <h3>Personal Record</h3>
+            @if (exercise.preferredPersonalRecord) {
+              <app-set-card
+                variant="row"
+                [set]="recordAsSet(exercise.preferredPersonalRecord)"
+                [fieldLabels]="selectedExerciseFieldLabels()"
+                [caption]="((exercise.preferredPersonalRecord.date | date:'mediumDate') ? (exercise.preferredPersonalRecord.type + ' PR • ' + (exercise.preferredPersonalRecord.date | date:'mediumDate')) : exercise.preferredPersonalRecord.type + ' PR')"
+              />
+            } @else {
+              <p class="empty-state">No PR recorded yet.</p>
+            }
+          </section>
+
+          <section class="detail-section">
+            <h3>Most Recent Set</h3>
+            @if (exercise.latestSet) {
+              <app-set-card
+                variant="row"
+                [set]="exercise.latestSet"
+                [fieldLabels]="selectedExerciseFieldLabels()"
+                [caption]="'Logged • ' + ((exercise.latestSet.date | date:'mediumDate') ?? '')"
+              />
+            } @else {
+              <p class="empty-state">No sets logged yet.</p>
+            }
+          </section>
+
+          <div class="modal-actions">
+            <app-button variant="update" label="Edit" (action)="exerciseEditMode.set(true)" />
+            <app-button variant="delete" label="Remove" (action)="removeExercise()" />
+          </div>
+        </div>
+      }
+
+      @if (exerciseModalError()) {
+        <p class="error">{{ exerciseModalError() }}</p>
+      }
+    } @else if (exerciseModalError()) {
+      <p class="error">{{ exerciseModalError() }}</p>
+    }
+  </app-modal>
+}
+
+@if (selectedLabel(); as label) {
+  <app-modal [title]="label.name" (close)="closeLabelModal()">
+    <app-create-label-form
+      mode="edit"
+      [initialLabel]="label"
+      [existingNames]="labels().map((entry) => entry.name)"
+      [loading]="labelActionLoading()"
+      [showDelete]="true"
+      (submitForm)="saveLabel($event)"
+      (cancel)="closeLabelModal()"
+      (deleteEntity)="removeLabel()"
+    />
+    @if (labelModalError()) {
+      <p class="error">{{ labelModalError() }}</p>
+    }
+  </app-modal>
+}

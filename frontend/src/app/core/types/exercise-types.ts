@@ -1,5 +1,7 @@
 import { Muscle } from './muscle-types';
+import { PersonalRecord } from './personal-record-types';
 import { TrackingField } from './tracking-field-types';
+import { SetEntry } from './workout-types';
 
 export interface ExerciseSummary {
   id: string;
@@ -13,6 +15,8 @@ export interface ExerciseSummary {
 
 export interface ExerciseDetail extends ExerciseSummary {
   trackedFields: TrackingField[];
+  preferredPersonalRecord: PersonalRecord | null;
+  latestSet: (SetEntry & { date: string }) | null;
 }
 
 export interface CreateExerciseDto {

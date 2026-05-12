@@ -4,6 +4,9 @@
   [class.card--row]="variant === 'row'"
   (click)="select.emit(set.id)"
 >
+  @if (caption) {
+    <p class="caption">{{ caption }}</p>
+  }
   <div class="values">
     @for (entry of set.values | keyvalue; track entry.key) {
       <span class="value-item">

@@ -4,10 +4,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, PRType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
+
+const PR_PREFERENCE: PRType[] = [
+  'WEIGHT' as PRType,
+  'PACE' as PRType,
+  'REPS' as PRType,
+  'DISTANCE' as PRType,
+];
 
 @Injectable()
 export class ExercisesService {
@@ -62,7 +69,51 @@ export class ExercisesService {
       },
     });
     if (!row) throw new NotFoundException();
-    return row;
+
+    const [personalRecords, latestSet] = await Promise.all([
+      this.prisma.client.personalRecord.findMany({
+        where: { exerciseId: id },
+        include: { exercise: true },
+      }),
+      this.prisma.client.setEntry.findFirst({
+        where: { workoutExercise: { exerciseId: id } },
+        orderBy: [
+          { workoutExercise: { workout: { dateTime: 'desc' } } },
+          { createdAt: 'desc' },
+        ],
+        include: {
+          workoutExercise: {
+            include: {
+              workout: {
+                select: { dateTime: true },
+              },
+            },
+          },
+        },
+      }),
+    ]);
+
+    const preferredPersonalRecord =
+      PR_PREFERENCE.map((type) =>
+        personalRecords.find((record) => record.type === type),
+      ).find(Boolean) ?? null;
+
+    return {
+      ...row,
+      preferredPersonalRecord,
+      latestSet: latestSet
+        ? {
+            id: latestSet.id,
+            values: latestSet.values,
+            notes: latestSet.notes,
+            sortOrder: latestSet.sortOrder,
+            createdAt: latestSet.createdAt,
+            updatedAt: latestSet.updatedAt,
+            workoutExerciseId: latestSet.workoutExerciseId,
+            date: latestSet.workoutExercise.workout.dateTime,
+          }
+        : null,
+    };
   }
 
   async update(id: string, dto: UpdateExerciseDto) {

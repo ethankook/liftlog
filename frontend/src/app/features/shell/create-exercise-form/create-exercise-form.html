@@ -79,7 +79,11 @@
   <div class="form-actions">
     <button type="button" class="cancel" (click)="cancel.emit()">Cancel</button>
     <button type="submit" class="create" [disabled]="!canSubmit()">
-      {{ loading ? 'Creating...' : 'Create Exercise' }}
+      {{
+        loading
+          ? (mode === 'edit' ? 'Saving...' : 'Creating...')
+          : (mode === 'edit' ? 'Save Exercise' : 'Create Exercise')
+      }}
     </button>
   </div>
 </form>

@@ -1,0 +1,29 @@
+.label-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 5rem;
+  width: 100%;
+  padding: 1rem;
+  border-width: 0.0625rem;
+  border-style: solid;
+  border-radius: 0.75rem;
+  text-align: left;
+  color: var(--color-text);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--label-color, var(--color-border)) 14%, transparent), transparent 55%),
+    var(--color-surface);
+  transition: border-color 0.2s ease, background-color 0.2s ease-in-out;
+}
+
+.label-card:hover {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--label-color, var(--color-border)) 20%, transparent), transparent 55%),
+    var(--color-card-hover);
+}
+
+.label-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}

@@ -23,6 +23,7 @@ enum UnitType {
 enum PRType {
   WEIGHT
   PACE
+  REPS
   DISTANCE
   TIME
 }

@@ -1,6 +1,6 @@
 import { ExerciseSummary } from './exercise-types';
 
-export type PRType = 'WEIGHT' | 'PACE' | 'DISTANCE' | 'TIME';
+export type PRType = 'WEIGHT' | 'PACE' | 'REPS' | 'DISTANCE' | 'TIME';
 
 export interface PersonalRecord {
   id: string;
