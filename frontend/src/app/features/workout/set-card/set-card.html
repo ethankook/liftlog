@@ -4,10 +4,15 @@
   [class.card--row]="variant === 'row'"
   (click)="select.emit(set.id)"
 >
-  @for (entry of set.values | keyvalue; track entry.key) {
-    <span>{{ fieldLabels[entry.key] ?? entry.key }}: {{ entry.value }}</span><br>
-  }
+  <div class="values">
+    @for (entry of set.values | keyvalue; track entry.key) {
+      <span class="value-item">
+        <span class="value-label">{{ fieldLabels[entry.key] ?? entry.key }}</span>
+        <span class="value-number">{{ entry.value }}</span>
+      </span>
+    }
+  </div>
   @if (set.notes) {
-    <p>Notes: {{ set.notes }}</p>
+    <p class="notes">{{ set.notes }}</p>
   }
 </div>

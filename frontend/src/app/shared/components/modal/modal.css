@@ -12,14 +12,14 @@
 
 .panel {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border: 0.0625rem solid var(--color-border);
+  border-radius: 1rem;
   width: min(100%, 40rem);
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 1.25rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.12), 0 0.125rem 0.5rem rgba(0, 0, 0, 0.06);
 }
 
 .modal-title {
@@ -28,5 +28,5 @@
   font-weight: 600;
   color: var(--color-text);
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid var(--color-border);
 }

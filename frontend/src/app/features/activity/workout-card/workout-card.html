@@ -4,17 +4,11 @@
   [class.card--row]="variant === 'row'"
   (click)="select.emit(workout.id)"
 >
-  <h2> {{ workout.title }}</h2>
-
-  @if (workout.label) {
-    <span
-      class="label-name"
-      [style.background-color]=workout.label.color
-    >
-    {{ workout.label.name}}
-  </span>
-
-  }
-
-<p>{{ workout.dateTime | date:'mediumDate' }}</p>
+  <h2>{{ workout.title }}</h2>
+  <div class="meta">
+    <app-chip [label]="(workout.dateTime | date:'mediumDate') ?? ''" />
+    @if (workout.label) {
+      <app-chip [label]="workout.label.name" [bgColor]="workout.label.color" />
+    }
+  </div>
 </div>

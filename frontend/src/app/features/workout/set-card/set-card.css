@@ -1,0 +1,30 @@
+.values {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.value-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.value-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.value-number {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.notes {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0.5rem 0 0;
+}

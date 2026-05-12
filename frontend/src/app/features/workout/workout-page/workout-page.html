@@ -5,34 +5,23 @@
 } @else if (workout(); as w) {
 
   <section class="header">
-    <input
-      type="text"
-      [value]="w.title"
-      (blur)="updateField('title', $event)"
-    /> <br>
-
-    @if (w.label) {
-      <span class="label" [style.color]="w.label.color">{{ w.label.name }}</span><br>
-    }
-
-    <p class="date">{{ w.dateTime | date:'medium' }}</p>
-
-    <label>
-      Body Weight
-      <input
-        type="number"
-        [value]="w.bodyWeight"
-        (blur)="updateField('bodyWeight', $event)"
-      />
-    </label><br>
-
-    <label>
-      Notes
-      <textarea
-        [value]="w.notes ?? ''"
-        (blur)="updateField('notes', $event)"
-      ></textarea>
-    </label><br>
+    <div class="header-meta">
+      <app-chip [label]="(w.dateTime | date:'mediumDate') ?? ''" />
+      @if (w.label) {
+        <app-chip [label]="w.label.name" [bgColor]="w.label.color" />
+      }
+    </div>
+    <input class="title-input" type="text" [value]="w.title" (blur)="updateField('title', $event)" />
+    <div class="header-fields">
+      <label>
+        Body Weight
+        <input type="number" [value]="w.bodyWeight" (blur)="updateField('bodyWeight', $event)" />
+      </label>
+      <label>
+        Notes
+        <textarea [value]="w.notes ?? ''" (blur)="updateField('notes', $event)"></textarea>
+      </label>
+    </div>
   </section>
 
 @if (addModalOpen()) {
@@ -46,6 +35,7 @@
   />
 }
   <section class="card-list card-list--row">
+    <h2>Exercises</h2>
     @for (we of w.workoutExercises; track we.id) {
       <app-workout-exercise-card
         variant="row"

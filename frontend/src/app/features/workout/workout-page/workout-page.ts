@@ -4,13 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WorkoutDetail, WorkoutExerciseDetail } from '../../../core/types';
 import { WorkoutExerciseCard } from '../workout-exercise-card/workout-exercise-card';
 import { Button } from '../../../shared/components/action-button/action-button';
+import { Chip } from '../../../shared/components/chip/chip';
 import { DatePipe } from '@angular/common';
 import { AddWorkoutExerciseModal } from '../add-workout-exercise-modal/add-workout-exercise-modal';
 import { WeModal } from '../we-modal/we-modal';
 
 @Component({
   selector: 'app-workout-page',
-  imports: [WorkoutExerciseCard, Button, DatePipe, AddWorkoutExerciseModal, WeModal],
+  imports: [WorkoutExerciseCard, Button, Chip, DatePipe, AddWorkoutExerciseModal, WeModal],
   templateUrl: './workout-page.html',
   styleUrl: './workout-page.css',
 })

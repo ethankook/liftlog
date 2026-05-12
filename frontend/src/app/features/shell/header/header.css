@@ -5,11 +5,11 @@ header {
   right:0;
   z-index: 100;
   background-color: var(--color-header-background);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 0.0625rem solid rgba(245, 166, 35, 0.2);
   justify-content: space-between;
   display: flex;
   padding: 0 1rem;
-  height: 40px;
+  height: 2.5rem;
   align-items: center;
 
 }
@@ -17,4 +17,19 @@ header {
 .right {
   display: flex;
   gap: 1rem;
+  align-items: center;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+.welcome {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  opacity: 0.75;
 }

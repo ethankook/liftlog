@@ -13,7 +13,7 @@
   --color-surface: #1e1b18;
   --color-text: #f2ede6;
   --color-text-muted: #8a837a;
-  --color-border: #2c2824;
+  --color-border: rgb(255 255 255 / 0.34);
   --color-primary: #f5a623;
   --color-accent: #f5a623;
   --color-error: #e85d4a;

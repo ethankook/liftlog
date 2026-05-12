@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { WorkoutSummary } from '../../../core/types';
 import { DatePipe } from '@angular/common';
+import { Chip } from '../../../shared/components/chip/chip';
 
 @Component({
   selector: 'app-workout-card',
-  imports: [DatePipe],
+  imports: [DatePipe, Chip],
   templateUrl: './workout-card.html',
   styleUrl: './workout-card.css',
 })

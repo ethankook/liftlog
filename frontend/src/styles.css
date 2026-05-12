@@ -21,6 +21,11 @@ h4 {
   font-family: var(--font-display);
 }
 
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-base); }
+
 button,
 input,
 textarea,
@@ -33,22 +38,21 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-background);
   color: var(--color-text);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
+  padding: 3.5rem 1rem 4.25rem;
   overflow-y: auto;
 }
 
 .card {
   padding: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border: 0.0625rem solid var(--color-border);
+  border-radius: 0.75rem;
   background-color: var(--color-surface);
+  transition: border-color 0.2s ease, background-color 0.2s ease-in-out;
 }
 .card:hover {
   background-color: var(--color-card-hover);
+  border-color: var(--color-accent);
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
 }
 
 .card-list {
@@ -88,8 +92,8 @@ textarea,
 select {
   background-color: var(--color-surface);
   color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: 0.375rem;
+  border: 0.0625rem solid var(--color-border);
+  border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   width: 100%;
   outline: none;

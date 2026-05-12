@@ -2,7 +2,7 @@
   <span class="brand">LiftLog</span>
 
   <div class="right">
-    <span>Welcome {{ username }}!</span>
-    <button type="button" (click)="logout.emit()">Logout</button>
+    <span class="welcome">Welcome {{ username }}!</span>
+    <app-button variant="other" label="Logout" (action)="logout.emit()" />
   </div>
 </header>
