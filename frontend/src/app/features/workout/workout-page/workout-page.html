@@ -7,9 +7,10 @@
   <section class="header">
     <div class="header-meta">
       <app-chip [label]="(w.dateTime | date:'mediumDate') ?? ''" />
-      @if (w.label) {
-        <app-chip [label]="w.label.name" [bgColor]="w.label.color" />
-      }
+      <app-chip
+        [label]="getWorkoutLabel(w.label).name"
+        [bgColor]="getWorkoutLabel(w.label).color"
+      />
     </div>
     <input class="title-input" type="text" [value]="w.title" (blur)="updateField('title', $event)" />
     <div class="header-fields">

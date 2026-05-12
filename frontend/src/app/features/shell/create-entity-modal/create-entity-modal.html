@@ -1,0 +1,40 @@
+<app-modal (close)="close.emit()">
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+  @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  @else {
+    @switch (kind) {
+      @case ('exercise') {
+        <app-create-exercise-form
+          [muscles]="muscles()"
+          [trackingFields]="trackingFields()"
+          [existingNames]="exercises().map((exercise) => exercise.name)"
+          [loading]="loading()"
+          (submitForm)="submitExercise($event)"
+          (cancel)="close.emit()"
+        />
+      }
+
+      @case ('workout') {
+        <app-create-workout-form
+          [labels]="labels()"
+          [loading]="loading()"
+          (submitForm)="submitWorkout($event)"
+          (cancel)="close.emit()"
+        />
+      }
+
+      @case ('label') {
+        <app-create-label-form
+          [existingNames]="labels().map((label) => label.name)"
+          [loading]="loading()"
+          (submitForm)="submitLabel($event)"
+          (cancel)="close.emit()"
+        />
+      }
+    }
+  }
+    </app-modal>

@@ -1,0 +1,85 @@
+<form class="entity-form" (ngSubmit)="onSubmit()">
+  <div class="field-group">
+    <label for="exercise-name">Exercise Name</label>
+    <input
+      id="exercise-name"
+      name="name"
+      type="text"
+      maxlength="100"
+      [(ngModel)]="name"
+      placeholder="Incline Dumbbell Press"
+    >
+    @if (nameError(); as error) {
+      <p class="field-error">{{ error }}</p>
+    }
+  </div>
+
+  <div class="field-group">
+    <label>Primary Muscle</label>
+    <div class="muscle-selector">
+      @for (group of muscleGroups; track group.group) {
+        <div class="muscle-group">
+          <span class="muscle-group-label" [style.color]="group.muscles[0].color">{{ group.group }}</span>
+          <div class="muscle-cards">
+            @for (muscle of group.muscles; track muscle.id) {
+              <button
+                type="button"
+                class="muscle-card"
+                [class.selected]="primaryMuscleId === muscle.id"
+                [style.--muscle-color]="muscle.color"
+                [style.border-color]="primaryMuscleId === muscle.id ? muscle.color : ''"
+                [style.background-color]="primaryMuscleId === muscle.id ? muscle.color + '22' : ''"
+                (click)="selectPrimaryMuscle(muscle.id)"
+              >{{ muscle.name }}</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>Secondary Muscles</label>
+    <div class="muscle-selector">
+      @for (group of secondaryMuscleGroups; track group.group) {
+        <div class="muscle-group">
+          <span class="muscle-group-label" [style.color]="group.muscles[0].color">{{ group.group }}</span>
+          <div class="muscle-cards">
+            @for (muscle of group.muscles; track muscle.id) {
+              <button
+                type="button"
+                class="muscle-card"
+                [class.selected]="isSecondaryMuscleSelected(muscle.id)"
+                [style.--muscle-color]="muscle.color"
+                [style.border-color]="isSecondaryMuscleSelected(muscle.id) ? muscle.color : ''"
+                [style.background-color]="isSecondaryMuscleSelected(muscle.id) ? muscle.color + '22' : ''"
+                (click)="toggleSecondaryMuscle(muscle.id)"
+              >{{ muscle.name }}</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>Tracking Fields</label>
+    <div class="tracking-cards">
+      @for (field of trackingFields; track field.id) {
+        <button
+          type="button"
+          class="tracking-card"
+          [class.selected]="isTrackingFieldSelected(field.id)"
+          (click)="toggleTrackingField(field.id)"
+        >{{ field.label }}</button>
+      }
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="cancel" (click)="cancel.emit()">Cancel</button>
+    <button type="submit" class="create" [disabled]="!canSubmit()">
+      {{ loading ? 'Creating...' : 'Create Exercise' }}
+    </button>
+  </div>
+</form>

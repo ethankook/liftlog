@@ -10,7 +10,7 @@ import { KeyValuePipe } from '@angular/common';
 })
 export class SetCard {
   @Input({ required: true }) set!: SetEntry;
-  @Input() fieldLabels: Record<string, string> = {};
+  @Input() fieldLabels: Partial<Record<string, string>> = {};
   @Input() variant: 'grid' | 'row' = 'row';
   @Output() select = new EventEmitter<string>();
 }

@@ -1,0 +1,36 @@
+<form class="entity-form" (ngSubmit)="onSubmit()">
+  <div class="field-group">
+    <label for="label-name">Label Name</label>
+    <input
+      id="label-name"
+      name="name"
+      type="text"
+      maxlength="50"
+      [(ngModel)]="name"
+      placeholder="Upper Body"
+    >
+    @if (nameError(); as error) {
+      <p class="field-error">{{ error }}</p>
+    }
+  </div>
+
+  <div class="field-group">
+    <label for="label-color">Color</label>
+    <div class="color-input-row">
+      <input
+        id="label-color"
+        name="color"
+        type="color"
+        [(ngModel)]="color"
+      >
+      <span class="color-value">{{ color }}</span>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="cancel" (click)="cancel.emit()">Cancel</button>
+    <button type="submit" class="create" [disabled]="!canSubmit()">
+      {{ loading ? 'Creating...' : 'Create Label' }}
+    </button>
+  </div>
+</form>

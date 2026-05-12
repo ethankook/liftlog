@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WorkoutSummary } from '../../../core/types';
+import { getWorkoutLabelOrDefault, WorkoutSummary } from '../../../core/types';
 import { DatePipe } from '@angular/common';
 import { Chip } from '../../../shared/components/chip/chip';
 
@@ -13,4 +13,6 @@ export class WorkoutCard {
   @Input({ required: true }) workout!: WorkoutSummary;
   @Input() variant: 'grid' | 'row' = 'row';
   @Output() select = new EventEmitter<string>();
+
+  protected readonly getWorkoutLabel = getWorkoutLabelOrDefault;
 }

@@ -1,7 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { WorkoutsService } from '../../../core/services/workouts';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WorkoutDetail, WorkoutExerciseDetail } from '../../../core/types';
+import {
+  getWorkoutLabelOrDefault,
+  WorkoutDetail,
+  WorkoutExerciseDetail,
+} from '../../../core/types';
 import { WorkoutExerciseCard } from '../workout-exercise-card/workout-exercise-card';
 import { Button } from '../../../shared/components/action-button/action-button';
 import { Chip } from '../../../shared/components/chip/chip';
@@ -27,6 +31,7 @@ export class WorkoutPage {
 
   addModalOpen = signal<boolean>(false);
   selectedWorkoutExercise = signal<WorkoutExerciseDetail | null>(null);
+  protected readonly getWorkoutLabel = getWorkoutLabelOrDefault;
 
   async ngOnInit() {
     const id = this.route.snapshot.params['id'];

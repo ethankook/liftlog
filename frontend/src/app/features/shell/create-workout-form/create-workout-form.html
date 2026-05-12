@@ -1,0 +1,82 @@
+<form class="entity-form" (ngSubmit)="onSubmit()">
+  <div class="field-group">
+    <label for="workout-title">Workout Title</label>
+    <input
+      id="workout-title"
+      name="title"
+      type="text"
+      maxlength="120"
+      [(ngModel)]="title"
+      placeholder="Push Day"
+    >
+  </div>
+
+  <div class="field-group">
+    <label>Label</label>
+    <div class="label-chips">
+      <button
+        type="button"
+        class="label-chip"
+        [class.selected]="labelId === ''"
+        [style.--label-color]="'#6B7280'"
+        [style.border-color]="labelId === '' ? '#6B7280' : ''"
+        [style.background-color]="labelId === '' ? '#6B728022' : ''"
+        (click)="labelId = ''"
+      >No label</button>
+      @for (label of labels; track label.id) {
+        <button
+          type="button"
+          class="label-chip"
+          [class.selected]="labelId === label.id"
+          [style.--label-color]="label.color"
+          [style.border-color]="labelId === label.id ? label.color : ''"
+          [style.background-color]="labelId === label.id ? label.color + '22' : ''"
+          (click)="toggleLabel(label.id)"
+        >{{ label.name }}</button>
+      }
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label for="body-weight">Body Weight</label>
+    <input
+      id="body-weight"
+      name="bodyWeight"
+      type="number"
+      min="0.01"
+      step="0.01"
+      [(ngModel)]="bodyWeight"
+      placeholder="180"
+    >
+  </div>
+
+  <div class="field-group">
+    <label>Date &amp; Time</label>
+    <div class="datetime-presets">
+      <button type="button" class="preset-btn" (click)="setNow()">Now</button>
+      <button type="button" class="preset-btn" (click)="setToday()">Today</button>
+      <button type="button" class="preset-btn" (click)="setYesterday()">Yesterday</button>
+    </div>
+    <div class="datetime-inputs">
+      <input type="date" id="workout-date" name="date" [(ngModel)]="date">
+      <input type="time" id="workout-time" name="time" [(ngModel)]="time">
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label for="workout-notes">Notes</label>
+    <textarea
+      id="workout-notes"
+      name="notes"
+      maxlength="2000"
+      [(ngModel)]="notes"
+    ></textarea>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="cancel" (click)="cancel.emit()">Cancel</button>
+    <button type="submit" class="create" [disabled]="!canSubmit()">
+      {{ loading ? 'Creating...' : 'Create Workout' }}
+    </button>
+  </div>
+</form>

@@ -1,3 +1,21 @@
+.card {
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  cursor: pointer;
+  transform: translateY(-0.125rem);
+  border-color: color-mix(in srgb, var(--color-border) 78%, white);
+  background-color: color-mix(in srgb, var(--color-surface) 88%, var(--color-border));
+  box-shadow:
+    0 0.75rem 1.5rem rgb(0 0 0 / 0.18),
+    0 0 0 0.0625rem color-mix(in srgb, var(--color-border) 55%, white);
+}
+
 .meta {
   display: flex;
   gap: 0.5rem;

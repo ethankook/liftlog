@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class WorkoutLabelsService {
   private http = inject(HttpClient);
-  private url = `${environment.apiUrl}/workout-labels}`;
+  private url = `${environment.apiUrl}/workout-labels`;
 
   async findAll(): Promise<WorkoutLabel[]> {
     return firstValueFrom(this.http.get<WorkoutLabel[]>(this.url));

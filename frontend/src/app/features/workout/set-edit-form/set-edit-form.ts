@@ -11,7 +11,7 @@ import { Button } from '../../../shared/components/action-button/action-button';
 })
 export class SetEditForm {
   @Input({ required: true }) set!: SetEntry;
-  @Input() fieldLabels: Record<string, string> = {};
+  @Input() fieldLabels: Partial<Record<string, string>> = {};
   @Output() save = new EventEmitter<{
     setId: string;
     values: Record<string, unknown>;
