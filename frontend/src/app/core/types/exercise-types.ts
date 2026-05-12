@@ -6,12 +6,12 @@ export interface ExerciseSummary {
   name: string;
   primaryMuscleId: string;
   primaryMuscle: Muscle;
+  secondaryMuscles: Muscle[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface ExerciseDetail extends ExerciseSummary {
-  secondaryMuscles: Muscle[];
   trackedFields: TrackingField[];
 }
 

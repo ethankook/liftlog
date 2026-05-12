@@ -2,11 +2,25 @@
   class="card"
   [class.card--grid]="variant === 'grid'"
   [class.card--row]="variant === 'row'"
+  [style.border-color]="workoutExercise.exercise.primaryMuscle.color"
   (click)="select.emit(workoutExercise.id)"
 >
   <div class="info">
     <h2>{{ workoutExercise.exercise.name }}</h2>
-    <h3>{{ workoutExercise.exercise.primaryMuscle.name }}</h3>
+    <div class="muscle-chips">
+      <app-chip
+        [label]="workoutExercise.exercise.primaryMuscle.name"
+        [bgColor]="workoutExercise.exercise.primaryMuscle.color + '22'"
+        [textColor]="workoutExercise.exercise.primaryMuscle.color"
+      />
+      @for (muscle of workoutExercise.exercise.secondaryMuscles; track muscle.id) {
+        <app-chip
+          [label]="muscle.name"
+          [bgColor]="muscle.color + '22'"
+          [textColor]="muscle.color"
+        />
+      }
+    </div>
     <p class="set-count">{{ workoutExercise.sets.length }} sets</p>
   </div>
   <app-button variant="delete" label="Remove" (action)="delete.emit(workoutExercise.id)" (click)="$event.stopPropagation(); delete.emit(workoutExercise.id)" />

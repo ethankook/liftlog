@@ -23,7 +23,11 @@ export class WorkoutExercisesService {
           exercise: { connect: { id: dto.exerciseId } },
           sortOrder,
         },
-        include: { exercise: { include: { primaryMuscle: true } } },
+        include: {
+          exercise: {
+            include: { primaryMuscle: true, secondaryMuscles: true },
+          },
+        },
       });
     } catch (e) {
       if (

@@ -1,0 +1,52 @@
+<div class="backdrop" (click)="close.emit()">
+  <div class="wheel-shell" (click)="$event.stopPropagation()">
+    <div class="wheel">
+      <svg
+        class="wheel-svg"
+        viewBox="0 0 240 120"
+        preserveAspectRatio="none"
+        aria-label="Create actions"
+      >
+        <path
+          class="segment-shape segment-exercise"
+          [attr.d]="segmentPaths.exercise"
+          tabindex="0"
+          focusable="true"
+          role="button"
+          aria-label="Exercise"
+          (click)="onSelect('exercise')"
+          (keydown)="onKeyActivate($event, 'exercise')"
+        />
+        <path
+          class="segment-shape segment-workout"
+          [attr.d]="segmentPaths.workout"
+          tabindex="0"
+          focusable="true"
+          role="button"
+          aria-label="Workout"
+          (click)="onSelect('workout')"
+          (keydown)="onKeyActivate($event, 'workout')"
+        />
+        <path
+          class="segment-shape segment-label"
+          [attr.d]="segmentPaths.label"
+          tabindex="0"
+          focusable="true"
+          role="button"
+          aria-label="Label"
+          (click)="onSelect('label')"
+          (keydown)="onKeyActivate($event, 'label')"
+        />
+        <path class="wheel-outline" d="M 0 120 A 120 120 0 0 1 240 120" aria-hidden="true" />
+        <path class="wheel-divider" d="M 120 120 L 60 16.08" aria-hidden="true" />
+        <path class="wheel-divider" d="M 120 120 L 180 16.08" aria-hidden="true" />
+      </svg>
+      @for (action of actions; track action.id) {
+        <span
+          class="segment-icon icon-{{ action.id }}"
+          [attr.aria-hidden]="true"
+        >{{ action.icon }}</span>
+      }
+    </div>
+  </div>
+</div>

@@ -13,5 +13,6 @@ export interface Muscle {
   id: string;
   name: string;
   slug: string;
+  color: string;
   group: MuscleGroup;
 }

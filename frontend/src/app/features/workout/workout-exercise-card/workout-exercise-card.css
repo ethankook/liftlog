@@ -15,3 +15,10 @@
   color: var(--color-text-muted);
   margin: 0;
 }
+
+.muscle-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}

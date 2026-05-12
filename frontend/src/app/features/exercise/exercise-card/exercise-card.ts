@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ExerciseSummary } from '../../../core/types';
+import { Chip } from '../../../shared/components/chip/chip';
 
 @Component({
   selector: 'app-exercise-card',
-  imports: [],
+  imports: [Chip],
   templateUrl: './exercise-card.html',
   styleUrl: './exercise-card.css',
 })

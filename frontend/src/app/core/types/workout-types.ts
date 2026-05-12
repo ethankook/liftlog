@@ -1,5 +1,4 @@
 import { ExerciseSummary } from './exercise-types';
-import { Muscle } from './muscle-types';
 import { WorkoutLabel } from './workout-label-types';
 
 export interface SetEntry {
@@ -16,7 +15,7 @@ export interface WorkoutExerciseDetail {
   id: string;
   workoutId: string;
   exerciseId: string;
-  exercise: ExerciseSummary & { secondaryMuscles: Muscle[] };
+  exercise: ExerciseSummary;
   sets: SetEntry[];
   sortOrder: number;
   createdAt: string;

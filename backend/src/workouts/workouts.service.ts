@@ -13,7 +13,7 @@ const fullInclude = {
   workoutExercises: {
     orderBy: { sortOrder: 'asc' },
     include: {
-      exercise: { include: { primaryMuscle: true } },
+      exercise: { include: { primaryMuscle: true, secondaryMuscles: true } },
       sets: { orderBy: { sortOrder: 'asc' } },
     },
   },

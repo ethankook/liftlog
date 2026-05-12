@@ -42,6 +42,7 @@ model Muscle {
   id    String      @id @default(uuid())
   name  String      @unique
   slug  String      @unique
+  color String
   group MuscleGroup
 
   primaryExercises   Exercise[] @relation("PrimaryMuscle")

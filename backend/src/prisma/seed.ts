@@ -44,51 +44,158 @@ async function seedWorkoutLabels() {
 
 async function seedMuscles() {
   const muscles = [
-    { name: 'Upper Chest', group: PrismaClientPackage.MuscleGroup.CHEST },
-    { name: 'Mid Chest', group: PrismaClientPackage.MuscleGroup.CHEST },
-    { name: 'Lower Chest', group: PrismaClientPackage.MuscleGroup.CHEST },
+    {
+      name: 'Upper Chest',
+      group: PrismaClientPackage.MuscleGroup.CHEST,
+      color: '#ef6f6c',
+    },
+    {
+      name: 'Mid Chest',
+      group: PrismaClientPackage.MuscleGroup.CHEST,
+      color: '#d95d67',
+    },
+    {
+      name: 'Lower Chest',
+      group: PrismaClientPackage.MuscleGroup.CHEST,
+      color: '#c44f5b',
+    },
 
-    { name: 'Front Delt', group: PrismaClientPackage.MuscleGroup.SHOULDER },
-    { name: 'Side Delt', group: PrismaClientPackage.MuscleGroup.SHOULDER },
-    { name: 'Rear Delt', group: PrismaClientPackage.MuscleGroup.SHOULDER },
+    {
+      name: 'Front Delt',
+      group: PrismaClientPackage.MuscleGroup.SHOULDER,
+      color: '#f59e0b',
+    },
+    {
+      name: 'Side Delt',
+      group: PrismaClientPackage.MuscleGroup.SHOULDER,
+      color: '#eab308',
+    },
+    {
+      name: 'Rear Delt',
+      group: PrismaClientPackage.MuscleGroup.SHOULDER,
+      color: '#ca8a04',
+    },
 
     {
       name: 'Long Head Triceps',
       group: PrismaClientPackage.MuscleGroup.TRICEP,
+      color: '#8b5cf6',
     },
     {
       name: 'Lateral Head Triceps',
       group: PrismaClientPackage.MuscleGroup.TRICEP,
+      color: '#7c3aed',
     },
     {
       name: 'Medial Head Triceps',
       group: PrismaClientPackage.MuscleGroup.TRICEP,
+      color: '#6d28d9',
     },
 
-    { name: 'Long Head Biceps', group: PrismaClientPackage.MuscleGroup.BICEP },
-    { name: 'Short Head Biceps', group: PrismaClientPackage.MuscleGroup.BICEP },
-    { name: 'Brachialis', group: PrismaClientPackage.MuscleGroup.BICEP },
+    {
+      name: 'Long Head Biceps',
+      group: PrismaClientPackage.MuscleGroup.BICEP,
+      color: '#3b82f6',
+    },
+    {
+      name: 'Short Head Biceps',
+      group: PrismaClientPackage.MuscleGroup.BICEP,
+      color: '#2563eb',
+    },
+    {
+      name: 'Brachialis',
+      group: PrismaClientPackage.MuscleGroup.BICEP,
+      color: '#1d4ed8',
+    },
 
-    { name: 'Lats', group: PrismaClientPackage.MuscleGroup.BACK },
-    { name: 'Upper Traps', group: PrismaClientPackage.MuscleGroup.BACK },
-    { name: 'Mid Traps', group: PrismaClientPackage.MuscleGroup.BACK },
-    { name: 'Lower Traps', group: PrismaClientPackage.MuscleGroup.BACK },
-    { name: 'Rhomboids', group: PrismaClientPackage.MuscleGroup.BACK },
-    { name: 'Erector Spinae', group: PrismaClientPackage.MuscleGroup.BACK },
+    {
+      name: 'Lats',
+      group: PrismaClientPackage.MuscleGroup.BACK,
+      color: '#14b8a6',
+    },
+    {
+      name: 'Upper Traps',
+      group: PrismaClientPackage.MuscleGroup.BACK,
+      color: '#0d9488',
+    },
+    {
+      name: 'Mid Traps',
+      group: PrismaClientPackage.MuscleGroup.BACK,
+      color: '#0f766e',
+    },
+    {
+      name: 'Lower Traps',
+      group: PrismaClientPackage.MuscleGroup.BACK,
+      color: '#115e59',
+    },
+    {
+      name: 'Rhomboids',
+      group: PrismaClientPackage.MuscleGroup.BACK,
+      color: '#0f766e',
+    },
+    {
+      name: 'Erector Spinae',
+      group: PrismaClientPackage.MuscleGroup.BACK,
+      color: '#134e4a',
+    },
 
-    { name: 'Upper Abs', group: PrismaClientPackage.MuscleGroup.CORE },
-    { name: 'Lower Abs', group: PrismaClientPackage.MuscleGroup.CORE },
-    { name: 'Obliques', group: PrismaClientPackage.MuscleGroup.CORE },
+    {
+      name: 'Upper Abs',
+      group: PrismaClientPackage.MuscleGroup.CORE,
+      color: '#22c55e',
+    },
+    {
+      name: 'Lower Abs',
+      group: PrismaClientPackage.MuscleGroup.CORE,
+      color: '#16a34a',
+    },
+    {
+      name: 'Obliques',
+      group: PrismaClientPackage.MuscleGroup.CORE,
+      color: '#15803d',
+    },
 
-    { name: 'Wrist Flexors', group: PrismaClientPackage.MuscleGroup.FOREARM },
-    { name: 'Wrist Extensors', group: PrismaClientPackage.MuscleGroup.FOREARM },
+    {
+      name: 'Wrist Flexors',
+      group: PrismaClientPackage.MuscleGroup.FOREARM,
+      color: '#64748b',
+    },
+    {
+      name: 'Wrist Extensors',
+      group: PrismaClientPackage.MuscleGroup.FOREARM,
+      color: '#475569',
+    },
 
-    { name: 'Quads', group: PrismaClientPackage.MuscleGroup.LEGS },
-    { name: 'Hamstrings', group: PrismaClientPackage.MuscleGroup.LEGS },
-    { name: 'Glutes', group: PrismaClientPackage.MuscleGroup.LEGS },
-    { name: 'Calves', group: PrismaClientPackage.MuscleGroup.LEGS },
-    { name: 'Hip Adductors', group: PrismaClientPackage.MuscleGroup.LEGS },
-    { name: 'Hip Abductors', group: PrismaClientPackage.MuscleGroup.LEGS },
+    {
+      name: 'Quads',
+      group: PrismaClientPackage.MuscleGroup.LEGS,
+      color: '#f97316',
+    },
+    {
+      name: 'Hamstrings',
+      group: PrismaClientPackage.MuscleGroup.LEGS,
+      color: '#ea580c',
+    },
+    {
+      name: 'Glutes',
+      group: PrismaClientPackage.MuscleGroup.LEGS,
+      color: '#fb7185',
+    },
+    {
+      name: 'Calves',
+      group: PrismaClientPackage.MuscleGroup.LEGS,
+      color: '#f43f5e',
+    },
+    {
+      name: 'Hip Adductors',
+      group: PrismaClientPackage.MuscleGroup.LEGS,
+      color: '#e11d48',
+    },
+    {
+      name: 'Hip Abductors',
+      group: PrismaClientPackage.MuscleGroup.LEGS,
+      color: '#be123c',
+    },
   ];
 
   for (const muscle of muscles) {

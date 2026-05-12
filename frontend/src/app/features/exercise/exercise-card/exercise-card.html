@@ -3,8 +3,23 @@
   [class.card--grid]="variant === 'grid'"
   [class.card--row]="variant === 'row'"
   [class.selected]="selected"
+  [style.--card-accent]="exercise.primaryMuscle.color"
+  [style.border-color]="exercise.primaryMuscle.color"
   (click)="select.emit(exercise.id)"
 >
-  <h2> {{ exercise.name }}</h2>
-  <h3>{{ exercise.primaryMuscle.name }}</h3>
+  <h2>{{ exercise.name }}</h2>
+  <div class="muscle-chips">
+    <app-chip
+      [label]="exercise.primaryMuscle.name"
+      [bgColor]="exercise.primaryMuscle.color + '22'"
+      [textColor]="exercise.primaryMuscle.color"
+    />
+    @for (muscle of exercise.secondaryMuscles; track muscle.id) {
+      <app-chip
+        [label]="muscle.name"
+        [bgColor]="muscle.color + '22'"
+        [textColor]="muscle.color"
+      />
+    }
+  </div>
 </div>
