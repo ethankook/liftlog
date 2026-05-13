@@ -152,17 +152,3 @@ The seeded admin account uses the values from `backend/.env`:
 - `ADMIN_PASSWORD`
 
 That keeps local setup simple while still exercising the real authentication flow.
-
-## Why This Project Stands Out
-
-- It solves a concrete product problem instead of stopping at entity management.
-- It combines frontend interaction design with backend data modeling and aggregation logic.
-- It includes meaningful domain modeling for workouts, muscles, tracking fields, and personal-record logic.
-- It demonstrates production-minded concerns like auth, environment configuration, database seeding, validation, and deploy-oriented build behavior.
-
-## Deployment Notes
-
-- In production, the Angular app and Nest API are intended to sit behind the same HTTPS origin.
-- The frontend production environment uses relative API requests, so the browser can call the current origin directly.
-- Set `FRONTEND_ORIGIN` only if the frontend is hosted on a separate origin from the API.
-- The provided Docker Compose setup binds Postgres to `127.0.0.1` by default for safer local development.
