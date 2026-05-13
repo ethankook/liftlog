@@ -323,7 +323,7 @@ export class StatsService {
           muscleId,
           muscleName: muscle?.name ?? 'Unknown',
           muscleColor: muscle?.color ?? '#888888',
-          group: muscle?.group ?? ('CORE' as MuscleGroup),
+          group: muscle?.group ?? 'CORE',
           exercises: exercises
             .sort(this.exerciseDescCmp)
             .slice(0, TOP_PER_SLICE)

@@ -10,10 +10,10 @@ import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
 
 const PR_PREFERENCE: PRType[] = [
-  'WEIGHT' as PRType,
-  'PACE' as PRType,
-  'REPS' as PRType,
-  'DISTANCE' as PRType,
+  PRType.WEIGHT,
+  PRType.PACE,
+  PRType.REPS,
+  PRType.DISTANCE,
 ];
 
 @Injectable()

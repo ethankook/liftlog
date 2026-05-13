@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     private readonly tokenService: TokenService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const token = this.extractBearerToken(request);
-    const payload = await this.tokenService.verifyAccessToken(token);
+    const payload = this.tokenService.verifyAccessToken(token);
 
     request.authUser = {
       id: payload.sub,
