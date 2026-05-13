@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { SetEntry } from '../../../core/types';
 import { KeyValuePipe } from '@angular/common';
 
 @Component({
   selector: 'app-set-card',
-  imports: [KeyValuePipe],
+  imports: [KeyValuePipe, CdkDragHandle],
   templateUrl: './set-card.html',
   styleUrl: './set-card.css',
 })

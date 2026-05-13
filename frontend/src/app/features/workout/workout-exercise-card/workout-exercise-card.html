@@ -5,6 +5,15 @@
   [style.border-color]="workoutExercise.exercise.primaryMuscle.color"
   (click)="select.emit(workoutExercise.id)"
 >
+  <button
+    type="button"
+    class="drag-handle"
+    cdkDragHandle
+    aria-label="Drag to reorder"
+    (click)="$event.stopPropagation()"
+  >
+    <span aria-hidden="true">⋮⋮</span>
+  </button>
   <div class="info">
     <h2>{{ workoutExercise.exercise.name }}</h2>
     <div class="muscle-chips">

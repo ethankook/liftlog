@@ -1,12 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { Muscle, MuscleGroup } from '../types';
 
-@Injectable({
-  providedIn: 'root',
-})
 @Injectable({ providedIn: 'root' })
 export class MusclesService {
   private http = inject(HttpClient);

@@ -6,15 +6,18 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
 
   const configService = app.get(ConfigService);
   const frontendOrigin = configService.get<string>('FRONTEND_ORIGIN');
   const port = configService.get<number>('PORT') ?? 3000;
 
-  app.enableCors({
-    origin: frontendOrigin,
-    credentials: true,
-  });
+  if (frontendOrigin) {
+    app.enableCors({
+      origin: frontendOrigin,
+      credentials: true,
+    });
+  }
 
   await app.listen(port);
 }

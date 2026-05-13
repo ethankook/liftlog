@@ -16,15 +16,11 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err) => {
       if (!(err instanceof HttpErrorResponse) || err.status != 401) {
-        console.log('interceptor caught error:', err.status, err);
-
         return throwError(() => err);
       }
 
       return from(auth.refresh()).pipe(
         switchMap((authResponse) => {
-          console.log('refresh succeeded, retrying original request');
-
           return next(
             req.clone({
               setHeaders: { Authorization: `Bearer ${authResponse.accessToken}` },
@@ -32,8 +28,6 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
           );
         }),
         catchError((refreshErr) => {
-          console.log('refresh failed:', refreshErr);
-
           router.navigateByUrl('/login');
           return throwError(() => refreshErr);
         }),

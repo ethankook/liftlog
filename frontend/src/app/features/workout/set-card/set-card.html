@@ -4,18 +4,29 @@
   [class.card--row]="variant === 'row'"
   (click)="select.emit(set.id)"
 >
-  @if (caption) {
-    <p class="caption">{{ caption }}</p>
-  }
-  <div class="values">
-    @for (entry of set.values | keyvalue; track entry.key) {
-      <span class="value-item">
-        <span class="value-label">{{ fieldLabels[entry.key] ?? entry.key }}</span>
-        <span class="value-number">{{ entry.value }}</span>
-      </span>
+  <button
+    type="button"
+    class="drag-handle"
+    cdkDragHandle
+    aria-label="Drag to reorder"
+    (click)="$event.stopPropagation()"
+  >
+    <span aria-hidden="true">⋮⋮</span>
+  </button>
+  <div class="set-body">
+    @if (caption) {
+      <p class="caption">{{ caption }}</p>
+    }
+    <div class="values">
+      @for (entry of set.values | keyvalue; track entry.key) {
+        <span class="value-item">
+          <span class="value-label">{{ fieldLabels[entry.key] ?? entry.key }}</span>
+          <span class="value-number">{{ entry.value }}</span>
+        </span>
+      }
+    </div>
+    @if (set.notes) {
+      <p class="notes">{{ set.notes }}</p>
     }
   </div>
-  @if (set.notes) {
-    <p class="notes">{{ set.notes }}</p>
-  }
 </div>

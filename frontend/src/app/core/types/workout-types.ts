@@ -63,6 +63,10 @@ export interface ReorderWorkoutExercisesDto {
   orderedIds: string[];
 }
 
+export interface ReorderSetEntriesDto {
+  orderedIds: string[];
+}
+
 export interface CreateSetEntryDto {
   values: Record<string, unknown>;
   notes?: string;

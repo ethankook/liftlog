@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import {
   CreateSetEntryDto,
   CreateWorkoutDto,
   CreateWorkoutExerciseDto,
+  ReorderSetEntriesDto,
   ReorderWorkoutExercisesDto,
   SetEntry,
   UpdateSetEntryDto,
@@ -78,6 +79,12 @@ export class WorkoutsService {
   async addSet(workoutId: string, weId: string, dto: CreateSetEntryDto): Promise<SetEntry> {
     return firstValueFrom(
       this.http.post<SetEntry>(`${this.url}/${workoutId}/exercises/${weId}/sets`, dto),
+    );
+  }
+
+  async reorderSets(workoutId: string, weId: string, dto: ReorderSetEntriesDto): Promise<void> {
+    await firstValueFrom(
+      this.http.patch<void>(`${this.url}/${workoutId}/exercises/${weId}/sets/reorder`, dto),
     );
   }
 

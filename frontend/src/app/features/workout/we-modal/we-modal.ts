@@ -8,6 +8,7 @@ import {
   Output,
   signal,
 } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Button } from '../../../shared/components/action-button/action-button';
 import { Modal } from '../../../shared/components/modal/modal';
 import { SetEntry, WorkoutExerciseDetail } from '../../../core/types';
@@ -18,7 +19,7 @@ import { ExercisesService } from '../../../core/services/exercises';
 
 @Component({
   selector: 'app-we-modal',
-  imports: [Button, SetCard, SetEditForm, Modal],
+  imports: [Button, SetCard, SetEditForm, Modal, CdkDropList, CdkDrag],
   templateUrl: './we-modal.html',
   styleUrl: './we-modal.css',
 })
@@ -142,6 +143,29 @@ export class WeModal implements OnInit {
       console.log('Failed to save set');
     } finally {
       this.pendingSetId.set(null);
+    }
+  }
+
+  async onSetDrop(event: CdkDragDrop<SetEntry[]>) {
+    if (event.previousIndex === event.currentIndex) return;
+    if (this.editingSetId() !== null) return;
+
+    const prev = this.sets();
+    const next = [...prev];
+    moveItemInArray(next, event.previousIndex, event.currentIndex);
+    this.sets.set(next);
+    this.emitWorkoutExerciseChange();
+
+    const orderedIds = next.map((s) => s.id).filter((id) => !this.isDraftSet(id));
+
+    try {
+      await this.workoutsService.reorderSets(this.workoutId, this.workoutExercise.id, {
+        orderedIds,
+      });
+    } catch {
+      this.sets.set(prev);
+      this.emitWorkoutExerciseChange();
+      console.log('Failed to reorder sets');
     }
   }
 

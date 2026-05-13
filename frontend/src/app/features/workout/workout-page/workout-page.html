@@ -37,10 +37,16 @@
     (close)="onWeModalClose()"
   />
 }
-  <section class="card-list card-list--row">
+  <section
+    class="card-list card-list--row"
+    cdkDropList
+    (cdkDropListDropped)="onExerciseDrop($event)"
+  >
     <h2>Exercises</h2>
     @for (we of w.workoutExercises; track we.id) {
       <app-workout-exercise-card
+        cdkDrag
+        cdkDragLockAxis="y"
         variant="row"
         [workoutExercise]="we"
         (select)="onExerciseSelect($event)"
@@ -49,7 +55,6 @@
     } @empty {
       <p>No exercises added yet.</p>
     }
-
   </section>
   <app-button variant="create" label="Add Exercise" (action)="onAddExercise()" />
   <app-button variant="delete" label="Delete Workout" (action)="onDeleteWorkout()" />

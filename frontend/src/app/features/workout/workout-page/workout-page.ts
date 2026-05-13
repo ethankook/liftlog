@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { WorkoutsService } from '../../../core/services/workouts';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -24,6 +25,8 @@ import { BackToTab } from '../../../shared/components/back-to-tab/back-to-tab';
     AddWorkoutExerciseModal,
     WeModal,
     BackToTab,
+    CdkDropList,
+    CdkDrag,
   ],
   templateUrl: './workout-page.html',
   styleUrl: './workout-page.css',
@@ -105,6 +108,25 @@ export class WorkoutPage {
     this.workout.update((w) =>
       w ? { ...w, workoutExercises: w.workoutExercises.filter((e) => e.id !== id) } : w,
     );
+  }
+
+  async onExerciseDrop(event: CdkDragDrop<WorkoutExerciseDetail[]>) {
+    const w = this.workout();
+    if (!w || event.previousIndex === event.currentIndex) return;
+
+    const prev = w.workoutExercises;
+    const next = [...prev];
+    moveItemInArray(next, event.previousIndex, event.currentIndex);
+    this.workout.set({ ...w, workoutExercises: next });
+
+    try {
+      await this.workoutsService.reorderExercises(this.workoutId, {
+        orderedIds: next.map((e) => e.id),
+      });
+    } catch {
+      this.workout.set({ ...w, workoutExercises: prev });
+      console.log('Failed to reorder exercises');
+    }
   }
 
   onAddExercise() {

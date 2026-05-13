@@ -158,12 +158,12 @@ async function seedMuscles() {
     {
       name: 'Wrist Flexors',
       group: PrismaClientPackage.MuscleGroup.FOREARM,
-      color: '#64748b',
+      color: '#40f5dd',
     },
     {
       name: 'Wrist Extensors',
       group: PrismaClientPackage.MuscleGroup.FOREARM,
-      color: '#475569',
+      color: '#16bbb6',
     },
 
     {

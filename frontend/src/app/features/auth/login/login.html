@@ -1,14 +1,29 @@
-<h1>Login</h1>
+<section class="login-shell">
+  <div class="login-card">
+    <p class="eyebrow">LiftLog</p>
+    <h1>Sign in</h1>
+    <p class="intro">Log your sessions, track your volume, and keep the next workout moving.</p>
 
-@if (error()) {
-  <p style="color: red">{{ error() }}</p>
-}
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
 
-<input #usernameInput type="text" placeholder="Username">
-<input #passwordInput type="password" placeholder="Password">
-<button
-  type="button"
-  (click)="onSubmit(usernameInput.value, passwordInput.value)"
-  [disabled]="loading()">
-  {{ loading() ? 'Signing in...' : 'Sign in' }}
-</button>
+    <div class="field-group">
+      <label for="username">Username</label>
+      <input #usernameInput id="username" type="text" placeholder="Username">
+    </div>
+
+    <div class="field-group">
+      <label for="password">Password</label>
+      <input #passwordInput id="password" type="password" placeholder="Password">
+    </div>
+
+    <button
+      type="button"
+      class="submit"
+      (click)="onSubmit(usernameInput.value, passwordInput.value)"
+      [disabled]="loading()">
+      {{ loading() ? 'Signing in...' : 'Sign in' }}
+    </button>
+  </div>
+</section>

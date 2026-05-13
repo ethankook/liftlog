@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -7,6 +8,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { PersonalRecordsService } from '../personal-records/personal-records.service';
 import { CreateSetEntryDto } from './dto/create-set-entry.dto';
+import { ReorderSetEntriesDto } from './dto/reorder-set-entries.dto';
 import { UpdateSetEntryDto } from './dto/update-set-entry.dto';
 
 @Injectable()
@@ -64,6 +66,31 @@ export class SetEntriesService {
     await this.assertSet(weId, id);
     await this.prisma.client.setEntry.delete({ where: { id } });
     await this.prs.recomputeForExercise(we.exerciseId);
+  }
+
+  async reorder(workoutId: string, weId: string, dto: ReorderSetEntriesDto) {
+    await this.assertWorkoutExercise(workoutId, weId);
+    const existing = await this.prisma.client.setEntry.findMany({
+      where: { workoutExerciseId: weId },
+      select: { id: true },
+    });
+    const existingIds = new Set(existing.map((r) => r.id));
+    if (
+      dto.orderedIds.length !== existingIds.size ||
+      dto.orderedIds.some((id) => !existingIds.has(id))
+    )
+      throw new ConflictException(
+        'orderedIds must contain exactly the sets of this workout exercise',
+      );
+
+    return this.prisma.client.$transaction(
+      dto.orderedIds.map((id, idx) =>
+        this.prisma.client.setEntry.update({
+          where: { id },
+          data: { sortOrder: idx },
+        }),
+      ),
+    );
   }
 
   private async assertWorkoutExercise(workoutId: string, weId: string) {

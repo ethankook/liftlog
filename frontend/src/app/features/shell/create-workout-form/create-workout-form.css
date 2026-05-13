@@ -30,6 +30,7 @@
 .datetime-presets {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .preset-btn {
@@ -57,4 +58,17 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+}
+
+@media (max-width: 40rem) {
+  .datetime-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 30rem) {
+  .preset-btn {
+    flex: 1 1 calc(50% - 0.5rem);
+    text-align: center;
+  }
 }

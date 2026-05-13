@@ -1,7 +1,5 @@
 :host {
   display: block;
-  width: min(100%, 62rem);
-  margin: 0 auto;
 }
 
 .page-header {

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
 import { CreateSetEntryDto } from './dto/create-set-entry.dto';
+import { ReorderSetEntriesDto } from './dto/reorder-set-entries.dto';
 import { UpdateSetEntryDto } from './dto/update-set-entry.dto';
 import { SetEntriesService } from './set-entries.service';
 
@@ -14,6 +15,15 @@ export class SetEntriesController {
     @Body() dto: CreateSetEntryDto,
   ) {
     return this.service.create(workoutId, weId, dto);
+  }
+
+  @Patch('reorder')
+  reorder(
+    @Param('workoutId') workoutId: string,
+    @Param('weId') weId: string,
+    @Body() dto: ReorderSetEntriesDto,
+  ) {
+    return this.service.reorder(workoutId, weId, dto);
   }
 
   @Patch(':id')

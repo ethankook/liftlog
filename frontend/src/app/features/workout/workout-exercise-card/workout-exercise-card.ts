@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { WorkoutExerciseDetail } from '../../../core/types';
 import { Button } from '../../../shared/components/action-button/action-button';
 import { Chip } from '../../../shared/components/chip/chip';
 
 @Component({
   selector: 'app-workout-exercise-card',
-  imports: [Button, Chip],
+  imports: [Button, Chip, CdkDragHandle],
   templateUrl: './workout-exercise-card.html',
   styleUrl: './workout-exercise-card.css',
 })

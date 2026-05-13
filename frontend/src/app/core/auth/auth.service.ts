@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthResponse, LoginRequest, User } from './auth.types';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,33 +26,19 @@ export class AuthService {
   private storeTokens(tokens: { accessToken: string; refreshToken: string }) {
     localStorage.setItem('liftlog_accessToken', tokens.accessToken);
     localStorage.setItem('liftlog_refreshToken', tokens.refreshToken);
-    console.log('Tokens stored');
   }
 
   private clearTokens() {
     localStorage.removeItem('liftlog_accessToken');
     localStorage.removeItem('liftlog_refreshToken');
-    console.log('Tokens cleared');
   }
 
   getAccessToken() {
-    const accessToken = localStorage.getItem('liftlog_accessToken');
-    if (accessToken) {
-      console.log('Access token found');
-      return accessToken;
-    }
-    console.log('Access token not found');
-    return null;
+    return localStorage.getItem('liftlog_accessToken');
   }
 
   getRefreshToken() {
-    const refreshToken = localStorage.getItem('liftlog_refreshToken');
-    if (refreshToken) {
-      console.log('Refresh token found');
-      return refreshToken;
-    }
-    console.log('Refresh token not found');
-    return null;
+    return localStorage.getItem('liftlog_refreshToken');
   }
 
   async login(loginRequest: LoginRequest) {
@@ -76,15 +62,7 @@ export class AuthService {
   }
 
   async me(): Promise<User> {
-    console.log('me() called, url:', `${environment.apiUrl}/auth/me`);
-    try {
-      const result = await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/auth/me`, {}));
-      console.log('me() succeeded:', result);
-      return result;
-    } catch (err) {
-      console.log('me() threw:', err);
-      throw err;
-    }
+    return firstValueFrom(this.http.get<User>(`${environment.apiUrl}/auth/me`, {}));
   }
 
   async refresh() {

@@ -2,7 +2,12 @@
   @if (loading()) {
     <p>Loading...</p>
   } @else {
-    <div class="card-list card-list--row">
+    <div
+      class="card-list card-list--row"
+      cdkDropList
+      [cdkDropListDisabled]="editingSetId() !== null"
+      (cdkDropListDropped)="onSetDrop($event)"
+    >
       @for (set of sets(); track set.id) {
         @if (editingSetId() === set.id) {
           <app-set-edit-form
@@ -15,6 +20,8 @@
           />
         } @else {
           <app-set-card
+            cdkDrag
+            cdkDragLockAxis="y"
             variant="row"
             [set]="set"
             [fieldLabels]="trackedFieldLabels()"

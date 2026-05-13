@@ -1,0 +1,82 @@
+:host {
+  display: block;
+}
+
+.login-shell {
+  min-height: calc(100dvh - 7.75rem);
+  display: grid;
+  place-items: center;
+  padding: 1rem 0 2rem;
+}
+
+.login-card {
+  width: min(100%, 26rem);
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 0.0625rem solid var(--color-border);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(245, 166, 35, 0.16), transparent 32%),
+    var(--color-surface);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.18);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-xs);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+h1 {
+  margin: 0;
+}
+
+.intro {
+  margin: -0.35rem 0 0;
+  color: var(--color-text-muted);
+}
+
+.field-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.error {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  border: 0.0625rem solid color-mix(in srgb, var(--color-error) 50%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--color-error) 12%, transparent);
+  color: var(--color-error);
+}
+
+.submit {
+  width: 100%;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--color-btn-create-bg);
+  color: var(--color-btn-create-text);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+@media (max-width: 30rem) {
+  .login-shell {
+    min-height: auto;
+    padding-top: 0.5rem;
+  }
+
+  .login-card {
+    padding: 1.125rem;
+    border-radius: 0.875rem;
+  }
+}
