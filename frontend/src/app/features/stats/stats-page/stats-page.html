@@ -1,0 +1,214 @@
+<header class="page-header">
+  <div class="page-title-row">
+    <h1>Stats</h1>
+    <span class="page-mark" aria-hidden="true"></span>
+  </div>
+  <p class="page-subtitle">All time &middot; the long game</p>
+</header>
+
+@if (loading()) {
+  <p class="status">Loading&hellip;</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (stats(); as data) {
+  <section class="stats-section totals-section">
+    <div class="section-heading">
+      <div class="section-heading-title">
+        <h2>Totals</h2>
+        <p class="section-heading-sub">Every rep, every session</p>
+      </div>
+    </div>
+    <div class="totals-row">
+      <div class="totals-card">
+        <span class="totals-label">Workouts</span>
+        <span class="totals-value">{{ data.totals.workouts }}</span>
+      </div>
+      <div class="totals-card">
+        <span class="totals-label">Sets</span>
+        <span class="totals-value">{{ data.totals.sets }}</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="sections-grid">
+    <section class="stats-section">
+      <div class="section-heading">
+        <div class="section-heading-title">
+          <h2>Top Muscles</h2>
+          <p class="section-heading-sub">By sets &middot; primary 1 &middot; secondary 0.5</p>
+        </div>
+        <span class="section-count">{{ topItems().length }}</span>
+      </div>
+
+      <div class="filter-tabs" role="tablist" aria-label="Top muscles grouping">
+        <button
+          type="button"
+          role="tab"
+          [class.active]="topMode() === 'muscle'"
+          [attr.aria-selected]="topMode() === 'muscle'"
+          (click)="setTopMode('muscle')"
+        >By Muscle</button>
+        <button
+          type="button"
+          role="tab"
+          [class.active]="topMode() === 'group'"
+          [attr.aria-selected]="topMode() === 'group'"
+          (click)="setTopMode('group')"
+        >By Group</button>
+      </div>
+
+      <div class="card-list">
+        @for (item of topItems(); track item.key; let i = $index) {
+          <ng-container *ngTemplateOutlet="statCard; context: { item, index: i }" />
+        } @empty {
+          <p class="empty-state">No sets logged yet.</p>
+        }
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="section-heading">
+        <div class="section-heading-title">
+          <h2>Least Hit</h2>
+          <p class="section-heading-sub">Muscles needing attention</p>
+        </div>
+        <span class="section-count">{{ bottomItems().length }}</span>
+      </div>
+
+      <div class="filter-tabs" role="tablist" aria-label="Least hit muscles grouping">
+        <button
+          type="button"
+          role="tab"
+          [class.active]="bottomMode() === 'muscle'"
+          [attr.aria-selected]="bottomMode() === 'muscle'"
+          (click)="setBottomMode('muscle')"
+        >By Muscle</button>
+        <button
+          type="button"
+          role="tab"
+          [class.active]="bottomMode() === 'group'"
+          [attr.aria-selected]="bottomMode() === 'group'"
+          (click)="setBottomMode('group')"
+        >By Group</button>
+      </div>
+
+      <div class="card-list">
+        @for (item of bottomItems(); track item.key; let i = $index) {
+          <ng-container *ngTemplateOutlet="statCard; context: { item, index: i, dim: true }" />
+        } @empty {
+          <p class="empty-state">No muscles defined.</p>
+        }
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="section-heading">
+        <div class="section-heading-title">
+          <h2>Top Labels</h2>
+          <p class="section-heading-sub">By workout count</p>
+        </div>
+        <span class="section-count">{{ data.topLabels.length }}</span>
+      </div>
+
+      <div class="card-list">
+        @for (l of data.topLabels; track l.labelId; let i = $index) {
+          <article class="stat-card" [style.--accent]="labelChipColor(l.color)">
+            <span class="stat-strip" aria-hidden="true"></span>
+            <div class="stat-body">
+              <div class="stat-top-row">
+                <span class="stat-name">{{ l.name }}</span>
+                <span class="stat-value">{{ l.workouts }}</span>
+              </div>
+              <div class="stat-bottom-row">
+                <span class="stat-rank-sub">
+                  <span class="stat-rank">{{ formatRank(i + 1) }}</span>
+                  <span class="stat-subtitle">Label</span>
+                </span>
+                <span class="stat-unit">workouts</span>
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty-state">No labelled workouts yet.</p>
+        }
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="section-heading">
+        <div class="section-heading-title">
+          <h2>Top Exercises</h2>
+          <p class="section-heading-sub">By sets logged</p>
+        </div>
+        <span class="section-count">{{ exerciseItems().length }}</span>
+      </div>
+
+      <div class="filter-tabs" role="tablist" aria-label="Exercises filter mode">
+        <button
+          type="button"
+          role="tab"
+          [class.active]="exerciseMode() === 'group'"
+          [attr.aria-selected]="exerciseMode() === 'group'"
+          (click)="setExerciseMode('group')"
+        >By Group</button>
+        <button
+          type="button"
+          role="tab"
+          [class.active]="exerciseMode() === 'muscle'"
+          [attr.aria-selected]="exerciseMode() === 'muscle'"
+          (click)="setExerciseMode('muscle')"
+        >By Muscle</button>
+      </div>
+
+      <select
+        class="filter-select"
+        [ngModel]="exerciseFilter()"
+        (ngModelChange)="exerciseFilter.set($event)"
+      >
+        <option value="">All {{ exerciseMode() === 'group' ? 'groups' : 'muscles' }}</option>
+        @for (opt of exerciseFilterOptions(); track opt.value) {
+          <option [value]="opt.value">{{ opt.label }}</option>
+        }
+      </select>
+
+      <div class="card-list">
+        @for (item of exerciseItems(); track item.key; let i = $index) {
+          <ng-container *ngTemplateOutlet="statCard; context: { item, index: i }" />
+        } @empty {
+          <p class="empty-state">No exercises match.</p>
+        }
+      </div>
+    </section>
+  </div>
+
+  <ng-template #statCard let-item="item" let-index="index" let-dim="dim">
+    <article
+      class="stat-card"
+      [class.stat-card--dim]="dim && item.value === '0'"
+      [style.--accent]="item.accent"
+    >
+      <span class="stat-strip" aria-hidden="true"></span>
+      <div class="stat-body">
+        <div class="stat-top-row">
+          <span class="stat-name">{{ item.name }}</span>
+          <span class="stat-value">{{ item.value }}</span>
+        </div>
+        <div class="stat-bottom-row">
+          <span class="stat-rank-sub">
+            <span class="stat-rank">{{ formatRank(index + 1) }}</span>
+            @if (item.chip) {
+              <app-chip
+                [label]="item.chip.label"
+                [bgColor]="item.chip.color"
+                textColor="#ffffff"
+              />
+            } @else if (item.subtitle) {
+              <span class="stat-subtitle">{{ item.subtitle }}</span>
+            }
+          </span>
+          <span class="stat-unit">{{ item.unit }}</span>
+        </div>
+      </div>
+    </article>
+  </ng-template>
+}

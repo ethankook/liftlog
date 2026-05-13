@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { ScrollLockService } from '../../../core/services/scroll-lock';
 
 type CreateWheelAction = 'exercise' | 'workout' | 'label';
 
@@ -10,8 +10,7 @@ type CreateWheelAction = 'exercise' | 'workout' | 'label';
   styleUrl: './half-wheel.css',
 })
 export class HalfWheel {
-  private document = inject(DOCUMENT);
-  private previousBodyOverflow = '';
+  private readonly scrollLock = inject(ScrollLockService);
 
   @Output() close = new EventEmitter<void>();
   @Output() selectAction = new EventEmitter<CreateWheelAction>();
@@ -33,12 +32,11 @@ export class HalfWheel {
   };
 
   ngOnInit() {
-    this.previousBodyOverflow = this.document.body.style.overflow;
-    this.document.body.style.overflow = 'hidden';
+    this.scrollLock.lock();
   }
 
   ngOnDestroy() {
-    this.document.body.style.overflow = this.previousBodyOverflow;
+    this.scrollLock.unlock();
   }
 
   protected onSelect(action: CreateWheelAction) {

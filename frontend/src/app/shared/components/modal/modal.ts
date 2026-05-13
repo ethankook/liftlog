@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { ScrollLockService } from '../../../core/services/scroll-lock';
 
 @Component({
   selector: 'app-modal',
@@ -8,18 +8,16 @@ import { DOCUMENT } from '@angular/common';
   styleUrl: './modal.css',
 })
 export class Modal {
-  private document = inject(DOCUMENT);
-  private previousBodyOverflow = '';
+  private readonly scrollLock = inject(ScrollLockService);
 
   @Input() title?: string;
   @Output() close = new EventEmitter<void>();
 
   ngOnInit() {
-    this.previousBodyOverflow = this.document.body.style.overflow;
-    this.document.body.style.overflow = 'hidden';
+    this.scrollLock.lock();
   }
 
   ngOnDestroy() {
-    this.document.body.style.overflow = this.previousBodyOverflow;
+    this.scrollLock.unlock();
   }
 }

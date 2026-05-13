@@ -1,12 +1,72 @@
-<app-modal title="Add Exercise" (close)="close.emit()">
+<app-modal [title]="mode() === 'create' ? 'Create Exercise' : 'Add Exercise'" (close)="close.emit()">
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else if (mode() === 'create') {
+    <app-create-exercise-form
+      [muscles]="muscles()"
+      [trackingFields]="trackingFields()"
+      [existingNames]="exercises().map((exercise) => exercise.name)"
+      [loading]="submitting()"
+      (submitForm)="createExercise($event)"
+      (cancel)="cancelCreateExercise()"
+    />
 
-  <div class="card-list card-list--grid">
-    @for (exercise of exercises(); track exercise.id) {
-      <app-exercise-card variant="grid" [exercise]="exercise" [selected]="isSelected(exercise.id)" (select)="toggleSelection($event)" />
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
     }
-  </div>
+  } @else {
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
 
+    <div class="filter-row">
+      <input
+        type="text"
+        placeholder="Search exercises or muscles"
+        [ngModel]="exerciseSearch()"
+        (ngModelChange)="exerciseSearch.set($event)"
+      >
+      <select
+        [ngModel]="exerciseMuscleGroup()"
+        (ngModelChange)="updateMuscleGroup($event)"
+      >
+        <option value="">All muscle groups</option>
+        @for (group of muscleGroups(); track group) {
+          <option [value]="group">{{ group }}</option>
+        }
+      </select>
+      <select
+        [ngModel]="exerciseMuscleId()"
+        (ngModelChange)="exerciseMuscleId.set($event)"
+      >
+        <option value="">All muscles</option>
+        @for (muscle of musclesForSelectedGroup(); track muscle.id) {
+          <option [value]="muscle.id">{{ muscle.name }}</option>
+        }
+      </select>
+    </div>
 
+    <div class="card-list card-list--grid">
+      @for (exercise of filteredExercises(); track exercise.id) {
+        <app-exercise-card
+          variant="grid"
+          [exercise]="exercise"
+          [selected]="isSelected(exercise.id)"
+          (select)="toggleSelection($event)"
+        />
+      } @empty {
+        <p>No exercises match the current filters.</p>
+      }
+    </div>
 
-  <app-button variant="create" label="Add Exercise" (action)="added.emit(selectedExercises())" />
+    <div class="modal-actions">
+      <app-button variant="update" label="Create Exercise" (action)="startCreateExercise()" />
+      <app-button
+        variant="create"
+        label="Add Exercise"
+        [disabled]="selectedExercises().length === 0 || submitting()"
+        (action)="addSelectedExercises()"
+      />
+    </div>
+  }
 </app-modal>

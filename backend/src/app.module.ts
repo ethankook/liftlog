@@ -10,6 +10,7 @@ import { WorkoutLabelsModule } from './workout-labels/workout-labels.module';
 import { MusclesModule } from './muscles/muscles.module';
 import { TrackingFieldsModule } from './tracking-fields/tracking-fields.module';
 import { PersonalRecordsModule } from './personal-records/personal-records.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PersonalRecordsModule } from './personal-records/personal-records.modul
     MusclesModule,
     TrackingFieldsModule,
     PersonalRecordsModule,
+    StatsModule,
   ],
   controllers: [AppController],
 })

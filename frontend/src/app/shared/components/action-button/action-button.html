@@ -1,1 +1,1 @@
-<button [class]="variant" (click)="action.emit()">{{ label }}</button>
+<button type="button" [class]="variant" [disabled]="disabled" (click)="action.emit()">{{ label }}</button>

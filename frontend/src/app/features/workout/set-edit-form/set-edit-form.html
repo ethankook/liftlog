@@ -2,20 +2,21 @@
   @for (entry of localValues | keyvalue; track entry.key) {
     <label>
       {{ fieldLabels[entry.key] ?? entry.key }}
-      <input type="number" [value]="entry.value" (blur)="onValueChange(entry.key, $event)" />
+      <input
+        type="number"
+        [value]="entry.value"
+        [disabled]="busy"
+        (input)="onValueChange(entry.key, $event)"
+      />
     </label> <br>
   }
 
   <label>
     Notes
-    <textarea [value]="localNotes" (blur)="onNotesChange($event)"></textarea>
+    <textarea [value]="localNotes" [disabled]="busy" (input)="onNotesChange($event)"></textarea>
   </label> <br>
 
-  <app-button variant="update" label="Save" (action)="save.emit({
-    setId: set.id,
-    values: localValues,
-    notes: localNotes
-  })" />
-  <app-button variant="delete" label="Delete" (action)="delete.emit(set.id)" />
-  <app-button variant="cancel" label="Cancel" (action)="cancel.emit()" />
+  <app-button variant="update" label="Save" [disabled]="busy" (action)="onSave()" />
+  <app-button variant="delete" label="Delete" [disabled]="busy" (action)="onDelete()" />
+  <app-button variant="cancel" label="Cancel" [disabled]="busy" (action)="cancel.emit()" />
 </div>

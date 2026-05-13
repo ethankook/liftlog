@@ -8,8 +8,9 @@
           <app-set-edit-form
             [set]="set"
             [fieldLabels]="trackedFieldLabels()"
+            [busy]="pendingSetId() === set.id"
             (save)="onSetSave($event)"
-            (cancel)="editingSetId.set(null)"
+            (cancel)="onSetCancel(set.id)"
             (delete)="onSetDelete($event)"
           />
         } @else {

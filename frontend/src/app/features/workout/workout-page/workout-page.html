@@ -3,6 +3,7 @@
 } @else if (error()) {
   <p class="error">{{ error() }}</p>
 } @else if (workout(); as w) {
+  <app-back-to-tab />
 
   <section class="header">
     <div class="header-meta">
@@ -32,6 +33,7 @@
   <app-we-modal
     [workoutExercise]="selectedWorkoutExercise()!"
     [workoutId]="workoutId"
+    (workoutExerciseChange)="onWorkoutExerciseChange($event)"
     (close)="onWeModalClose()"
   />
 }

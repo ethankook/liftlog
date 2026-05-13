@@ -1,9 +1,9 @@
 <nav>
-  <a routerLink="/dashboard"  routerLinkActive="active">Dashboard</a>
-  <a routerLink="/activity"  routerLinkActive="active">Activity</a>
+  <a routerLink="/dashboard" [class.active]="navigation.isTabActive('dashboard')">Dashboard</a>
+  <a routerLink="/activity" [class.active]="navigation.isTabActive('activity')">Activity</a>
   <a href="" class="create-trigger" [class.active]="createWheelOpen()" (click)="toggleCreateWheel($event)">+</a>
-  <a routerLink="/calendar"  routerLinkActive="active">Calendar</a>
-  <a routerLink="/settings"  routerLinkActive="active">Settings</a>
+  <a routerLink="/stats" [class.active]="navigation.isTabActive('stats')">Stats</a>
+  <a routerLink="/settings" [class.active]="navigation.isTabActive('settings')">Settings</a>
 </nav>
 
 @if (createWheelOpen()) {

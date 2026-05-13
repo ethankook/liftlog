@@ -28,6 +28,11 @@ export const routes: Routes = [
           import('./features/activity/activity-tab/activity-tab').then((m) => m.ActivityTab),
       },
       {
+        path: 'stats',
+        loadComponent: () =>
+          import('./features/stats/stats-page/stats-page').then((m) => m.StatsPage),
+      },
+      {
         path: 'workouts/:id',
         loadComponent: () =>
           import('./features/workout/workout-page/workout-page').then((m) => m.WorkoutPage),

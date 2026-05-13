@@ -94,7 +94,9 @@ export class WorkoutsService {
 
   async removeSet(workoutId: string, weId: string, setId: string): Promise<void> {
     await firstValueFrom(
-      this.http.delete<void>(`${this.url}/${workoutId}/exercises/${weId}/sets/${setId}`),
+      this.http.delete(`${this.url}/${workoutId}/exercises/${weId}/sets/${setId}`, {
+        responseType: 'text',
+      }),
     );
   }
 }

@@ -12,10 +12,19 @@ import { Chip } from '../../../shared/components/chip/chip';
 import { DatePipe } from '@angular/common';
 import { AddWorkoutExerciseModal } from '../add-workout-exercise-modal/add-workout-exercise-modal';
 import { WeModal } from '../we-modal/we-modal';
+import { BackToTab } from '../../../shared/components/back-to-tab/back-to-tab';
 
 @Component({
   selector: 'app-workout-page',
-  imports: [WorkoutExerciseCard, Button, Chip, DatePipe, AddWorkoutExerciseModal, WeModal],
+  imports: [
+    WorkoutExerciseCard,
+    Button,
+    Chip,
+    DatePipe,
+    AddWorkoutExerciseModal,
+    WeModal,
+    BackToTab,
+  ],
   templateUrl: './workout-page.html',
   styleUrl: './workout-page.css',
 })
@@ -64,6 +73,20 @@ export class WorkoutPage {
   onExerciseSelect(id: string) {
     const we = this.workout()?.workoutExercises.find((e) => e.id === id) ?? null;
     this.selectedWorkoutExercise.set(we);
+  }
+
+  onWorkoutExerciseChange(updatedWorkoutExercise: WorkoutExerciseDetail) {
+    this.workout.update((workout) =>
+      workout
+        ? {
+            ...workout,
+            workoutExercises: workout.workoutExercises.map((exercise) =>
+              exercise.id === updatedWorkoutExercise.id ? updatedWorkoutExercise : exercise,
+            ),
+          }
+        : workout,
+    );
+    this.selectedWorkoutExercise.set(updatedWorkoutExercise);
   }
 
   async onWeModalClose() {
